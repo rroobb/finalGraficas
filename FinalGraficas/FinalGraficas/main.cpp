@@ -1,20 +1,43 @@
-
+// Smash Junk Food
+// Roberto Rivera - A00618181
+// Marialicia Villarreal - A00811095
 
 #include <iostream>
+#ifdef __APPLE__
 #include <GLUT/glut.h>
+#else
+#include <windows.h>
+#include <GL/glut.h>
+#endif
+
+#include <stdlib.h>
+#include <stdio.h>
 #include "Pelota.h"
 #include <vector>
-//si es windows  <GL/glut.h>
+
+using namespace std;
+
 Pelota *aux = new Pelota(0,0,0,0,0,0,0);
 int listaPelota, listaFondo;
+
 void init(void)
 {
-    glClearColor (0.0, 0.0, 0.0, 0.0);
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);
+}
 
-    glShadeModel (GL_FLAT );
+void reshape (int w, int h)
+{
+    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
 
-        aux->setVelZ(4);
-    
+    glMatrixMode (GL_PROJECTION);
+    glLoadIdentity();
+    glOrtho(-800, 800, -800, 800, 0, 400);
+
+    glMatrixMode (GL_MODELVIEW);
+    glLoadIdentity();
+    gluLookAt(0, 0, 200, 0, 0, 0, 0, 1, 0);
 }
 
 void myTimer(int v)
@@ -24,7 +47,6 @@ void myTimer(int v)
     aux->setPosZ(aux->getPosZ()+aux->getVelZ());
     glutPostRedisplay();
     glutTimerFunc(500, myTimer, 1);
-    
 }
 
 void createList()
@@ -46,62 +68,46 @@ void createList()
     glEndList();
 }
 
-void display() {
-    
-    glClear(GL_COLOR_BUFFER_BIT );
+void display()
+{
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
     glColor3f(0.0, 1.0, 0.0);
+
     glPushMatrix();
-    glTranslatef(0, 0,0);
+    glTranslatef(0, 0, 0);
+    glutWireCube(50);
+    glPopMatrix();
 
-    glutWireCube(1);
-    glPopMatrix();
-  /*  glPushMatrix();
-    glTranslatef(aux->getPosX(), aux->getPosY(), aux->getPosZ());
-    glScalef(20, 20, 20);
-    glCallList(listaPelota);
-    glPopMatrix();
-    */glutSwapBuffers();
+    glutSwapBuffers();
 }
-
-
 
 
 void keyboard(unsigned char key, int mouseX, int mouseY)
 {
     switch (key)
     {
-       
+        case 27: exit(0); break;
         default:
             break;
     }
-    
-    
-}
 
 
-void reshape (int w, int h)
-{
-    glViewport (0, 0, (GLsizei) w, (GLsizei) h);
-    glMatrixMode (GL_PROJECTION);
-    glLoadIdentity ();
-    glFrustum (-1.0, 1.0, -1.0, 1.0, 0, 6.0);
-    glMatrixMode (GL_MODELVIEW);
-    glLoadIdentity ();
-    gluLookAt (0.0, 0.0, 0, 1.0, 0.0, 6.0, 0.0, 1.0, 0.0);
 }
+
 
 int main(int argc, char** argv)
 {
     glutInit(&argc, argv);
-    glutInitDisplayMode (GLUT_DOUBLE | GLUT_RGB);
-    glutInitWindowSize (800, 800);
-    glutInitWindowPosition (100, 100);
+    glutInitWindowSize (800,800);
+    glutInitWindowPosition (0,0);
+    glutInitDisplayMode (GLUT_DOUBLE| GLUT_RGB| GLUT_DEPTH);
     glutCreateWindow (argv[0]);
-    init ();
-    glutDisplayFunc(display);
+    init();
     glutReshapeFunc(reshape);
-    glutTimerFunc(100,myTimer,1);
-    
+    glutDisplayFunc(display);
+    //glutTimerFunc(5, myTimer, 1);
+    glutKeyboardFunc(keyboard);
     glutMainLoop();
     return 0;
 }
