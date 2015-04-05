@@ -5,7 +5,7 @@
 #include "Pelota.h"
 #include <vector>
 //si es windows  <GL/glut.h>
-Pelota *aux = new Pelota(0,0,0,0,0,0,0);
+Pelota *aux = new Pelota(0,0,0,0);
 int listaPelota, listaFondo;
 void init(void)
 {
@@ -13,15 +13,12 @@ void init(void)
 
     glShadeModel (GL_FLAT );
 
-        aux->setVelZ(4);
     
 }
 
 void myTimer(int v)
 {
-    aux->setPosX(aux->getPosX()+aux->getVelX());
-    aux->setPosY(aux->getPosY()+aux->getVelY());
-    aux->setPosZ(aux->getPosZ()+aux->getVelZ());
+
     glutPostRedisplay();
     glutTimerFunc(500, myTimer, 1);
     
