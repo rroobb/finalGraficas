@@ -42,9 +42,7 @@ void reshape (int w, int h)
 
 void myTimer(int v)
 {
-    aux->setPosX(aux->getPosX()+aux->getVelX());
-    aux->setPosY(aux->getPosY()+aux->getVelY());
-    aux->setPosZ(aux->getPosZ()+aux->getVelZ());
+
     glutPostRedisplay();
     glutTimerFunc(500, myTimer, 1);
 }
@@ -91,8 +89,6 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
         default:
             break;
     }
-
-
 }
 
 

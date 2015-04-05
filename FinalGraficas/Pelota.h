@@ -8,17 +8,14 @@
 
 class Pelota{
     private:
-        float posX, posY, posZ, velX, velY, velZ, tipo;
+        float posX, posY, posZ, tipo;
         Pelota *colision;
     public:
-    Pelota(int posX, int posY, int posZ, int velX, int velY, int velZ, int tipo);
+    Pelota(int posX, int posY, int posZ, int tipo);
     void setPosX(int x);
     void setTipo(int t);
     void setPosY(int y);
     void setPosZ(int z);
-    void setVelX(int vx);
-    void setVelY(int vy);
-    void setVelZ(int vz);
     void setColision(Pelota *pelota);
     int getPosX();
     int getTipo();
@@ -32,15 +29,13 @@ class Pelota{
     
 };
 
-Pelota::Pelota(int posX, int posY, int posZ, int velX, int velY, int velZ, int tipo){
+Pelota::Pelota(int posX, int posY, int posZ, int tipo){
     this->colision = NULL;
    this->posX = posX;
     this->posY = posY;
     this->posZ = posZ;
-    this->velX = velX;
-    this->velY = velY;
     this->tipo = tipo;
-    this->velZ = velZ;
+
 }
 
 void Pelota::setPosX(int x){
@@ -55,15 +50,6 @@ void Pelota::setPosY(int y){
 void Pelota::setPosZ(int z){
     this->posZ = z;
 }
-void Pelota::setVelX(int vx){
-    this->velX = vx;
-}
-void Pelota::setVelZ(int vz){
-    this->velZ = vz;
-}
-void Pelota::setVelY(int vy){
-    this->velY = vy;
-}
 void Pelota::setColision(Pelota *pelota){
     this->colision = pelota;
 }
@@ -74,19 +60,10 @@ int Pelota::getPosY(){
     return this->posY;
 }
 
-
 int Pelota::getPosZ(){
     return this->posZ;
 }
-int Pelota::getVelX(){
-    return this->velX;
-}
-int Pelota::getVelZ(){
-    return this->velZ;
-}
-int Pelota::getVelY(){
-    return this->velY;
-}
+
 int Pelota::getTipo(){
     return this->tipo;
 }
