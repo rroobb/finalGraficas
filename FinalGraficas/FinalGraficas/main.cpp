@@ -17,7 +17,7 @@
 
 using namespace std;
 
-Pelota *aux = new Pelota(0,0,0,0,0,0,0);
+Pelota *aux = new Pelota(0,0,0,0);
 int listaPelota, listaFondo;
 
 const float medida = 1.0;
@@ -44,9 +44,6 @@ void reshape (int w, int h)
 
 void myTimer(int v)
 {
-    aux->setPosX(aux->getPosX()+aux->getVelX());
-    aux->setPosY(aux->getPosY()+aux->getVelY());
-    aux->setPosZ(aux->getPosZ()+aux->getVelZ());
     glutPostRedisplay();
     glutTimerFunc(5, myTimer, 1);
 }
