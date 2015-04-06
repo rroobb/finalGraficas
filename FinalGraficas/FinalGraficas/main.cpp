@@ -35,11 +35,12 @@ void reshape (int w, int h)
 
     glMatrixMode (GL_PROJECTION);
     glLoadIdentity();
-    gluPerspective(60.0, 1.0, 1.0, 10.0);
+    //gluPerspective(60.0, 1.0, 1.0, 10.0);
+    glFrustum(-1.0, 1.0, -1.0, 1.0, 1.0, 3.5);
 
     glMatrixMode (GL_MODELVIEW);
     glLoadIdentity();
-    gluLookAt(0, 0, 2.7, 0, 0, 0, 0, 1, 0);
+    gluLookAt(0, 0, 2.0, 0, 0, 0, 0, 1, 0);
 }
 
 void myTimer(int v)
@@ -116,6 +117,14 @@ void display()
 
     glEnd();
 
+    glPopMatrix();
+
+
+    glColor3ub(0, 0, 0);
+    glPushMatrix();
+    glScalef (0.5, 0.5, 1.0);
+    glTranslatef (0.5, 0.0, 0.5);
+    glutWireCube(1.0);
     glPopMatrix();
 
     glutSwapBuffers();
