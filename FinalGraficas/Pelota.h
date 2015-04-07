@@ -26,6 +26,7 @@ class Pelota{
     int getVelY();
     Pelota* getColision();
     int checarColision(Pelota pelota);
+    void destruir();
     
 };
 
@@ -73,7 +74,7 @@ Pelota* Pelota::getColision(){
 
 int Pelota::checarColision(Pelota pelota){
     //0: nada, 1: colision, 3 destruir bolas
-    float radio = 5;
+    float radio = .5;
     int respuesta = 0;
     if (((this->posX-radio <= pelota.getPosX()-radio && this->posX+radio >= pelota.getPosX()-radio) ||
         (this->posX-radio <= pelota.getPosX()+radio && this->posX+radio >= pelota.getPosX()+radio)) &&
@@ -93,4 +94,8 @@ int Pelota::checarColision(Pelota pelota){
         }
     }
     return respuesta;
+}
+
+void Pelota:: destruir(){
+    
 }
