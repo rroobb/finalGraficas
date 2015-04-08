@@ -26,9 +26,20 @@ vector<Pelota*> pelotasEstaticas;
 
 const float medida = 10.0;
 
+
+float getRandomVel(){
+    float aux = rand() % 11;
+    aux/= 10;
+    float num = rand() % 11;
+    if (num > 5) {
+        aux*= -1;
+    }
+    return aux;
+}
+
 void initValues(){
-    velX = 0;
-    velY = 0;
+    velX = getRandomVel();
+    velY = getRandomVel();
     isMoving = false;
 }
 
@@ -69,6 +80,7 @@ int getRandomTipo(){
     }
     return tipo;
 }
+
 
 void myTimer(int v)
 {
@@ -117,6 +129,7 @@ void myTimer(int v)
                     actual->setPosX(0);
                     actual->setPosY(0);
                     actual->setPosZ(-20);
+                    actual->setTipo(getRandomTipo());
                     glutPostRedisplay();
                     return;
                     break;
@@ -124,10 +137,11 @@ void myTimer(int v)
                     break;
             }
         }
-        glutPostRedisplay();
         actual->setPosX(actual->getPosX() + velX);
         actual->setPosY(actual->getPosY() + velY);
         actual->setPosZ(actual->getPosZ() - 1);
+        glutPostRedisplay();
+
     }
     
     glutTimerFunc(100, myTimer, 1);
@@ -234,21 +248,10 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
         case 27: exit(0); break;
         
             case 't':
+            if (!isMoving) {
             isMoving=true;
-
             glutTimerFunc(100, myTimer, 1);
-            break;
-            case 'w':
-            velX+=.1;
-            break;
-            case 's':
-            velX-=.1;
-            break;
-            case 'e':
-            velY+= .1;
-            break;
-            case 'd':
-            velY-=.1;
+            }
             break;
         default:
             break;
