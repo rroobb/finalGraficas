@@ -95,7 +95,7 @@ void myTimer(int v)
         if (actual->getPosZ()<=-60) {
             initValues();
             pelotasEstaticas.push_back(actual);
-            actual = new Pelota(0,0,-20,0);
+            actual = new Pelota(0,0,-20,getRandomTipo());
             glutPostRedisplay();
             return;
         }
@@ -106,7 +106,7 @@ void myTimer(int v)
                 case 1:
                     initValues();
                     pelotasEstaticas.push_back(actual);
-                    actual = new Pelota(0,0,-20,0);
+                    actual = new Pelota(0,0,-20,getRandomTipo());
                     glutPostRedisplay();
                     return;
                 case 3:
