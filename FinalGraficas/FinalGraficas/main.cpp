@@ -17,10 +17,11 @@
 
 using namespace std;
 
-Pelota *actual = new  Pelota(0,0,4,0);
+Pelota *actual = new  Pelota(0,0,-20,0);
 int listaPelota, listaFondo;
 float velX,velY;
 bool isMoving = false;
+int dificultad;
 vector<Pelota*> pelotasEstaticas;
 
 const float medida = 10.0;
@@ -37,6 +38,7 @@ void init(void)
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
     initValues();
+    dificultad = 0;
 }
 
 void reshape (int w, int h)
@@ -48,6 +50,24 @@ void reshape (int w, int h)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.0f, 1.0f, -6.0f);
+}
+
+int getRandomTipo(){
+    int tipo = 0;
+    switch (dificultad) {
+        case 0: //facil
+            tipo = rand() % 5;
+            break;
+        case 1: //medio
+            tipo = rand() % 6;
+            break;
+        case 2: //dificil
+            tipo = rand() % 8;
+            break;
+        default:
+            break;
+    }
+    return tipo;
 }
 
 void myTimer(int v)
@@ -63,29 +83,32 @@ void myTimer(int v)
         if (actual->getPosZ()<=-60) {
             initValues();
             pelotasEstaticas.push_back(actual);
-            actual = new Pelota(0,0,4,0);
+            actual = new Pelota(0,0,-20,0);
             glutPostRedisplay();
             return;
         }
         for (int i = 0; i<pelotasEstaticas.size() && i >=0; i++) {
-            switch (pelotasEstaticas[i]->checarColision(*actual)) {
+            switch (pelotasEstaticas[i]->checarColision(actual)) {
                 case 0:
                     break;
                 case 1:
                     initValues();
                     pelotasEstaticas.push_back(actual);
-                    actual = new Pelota(0,0,4,0);
+                    actual = new Pelota(0,0,-20,0);
                     glutPostRedisplay();
                     return;
                 case 3:
                     initValues();
-                    actual->destruir();
+            /*        actual->destruir();
                     pelotasEstaticas[i]->destruir();
-                    pelotasEstaticas[i]->getColision()->destruir();
+                    pelotasEstaticas[i]->getColision()->destruir();*/
                     for (int cont=0; cont<pelotasEstaticas.size(); cont++) {
                         if (pelotasEstaticas[cont] == pelotasEstaticas[i]->getColision()) {
                             delete(pelotasEstaticas[cont]);
                             pelotasEstaticas.erase(pelotasEstaticas.begin() + cont);
+                            if (cont < i ){
+                                i--;
+                            }
                             break;
                         }
                     }
@@ -93,7 +116,7 @@ void myTimer(int v)
                     pelotasEstaticas.erase(pelotasEstaticas.begin() + i);
                     actual->setPosX(0);
                     actual->setPosY(0);
-                    actual->setPosZ(4);
+                    actual->setPosZ(-20);
                     glutPostRedisplay();
                     return;
                     break;
@@ -182,7 +205,7 @@ void display()
     glPushMatrix();
     glLineWidth(5);
     glTranslatef (actual->getPosX(), actual->getPosY(), actual->getPosZ() );
-    glScalef (.5, .5, .2);
+
     glRotatef(actual->getPosZ(), 1.0, 1.0, 1.0);
     glutSolidSphere(1, 20, 20);
     glColor3ub(0, 0, 255);
@@ -193,7 +216,7 @@ void display()
         glPushMatrix();
         glLineWidth(5);
         glTranslatef (pelotasEstaticas[i]->getPosX(), pelotasEstaticas[i]->getPosY(), pelotasEstaticas[i]->getPosZ() );
-        glScalef (.5, .5, .2);
+        glScalef (1, 1, 1);
         glutSolidSphere(1, 20, 20);
         glColor3ub(0, 0, 255);
         glutWireSphere(1, 20, 20);
@@ -212,14 +235,55 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
         
             case 't':
             isMoving=true;
-            velY=-1;
-            velX= 2;
+
             glutTimerFunc(100, myTimer, 1);
+            break;
+            case 'w':
+            velX+=.1;
+            break;
+            case 's':
+            velX-=.1;
+            break;
+            case 'e':
+            velY+= .1;
+            break;
+            case 'd':
+            velY-=.1;
+            break;
         default:
             break;
     }
 }
-
+void specialKeys (int key, int x, int y){
+    switch (key) {
+        case GLUT_KEY_UP:
+            if (!isMoving && actual->getPosY()+1 <10) {
+                actual->setPosY(actual->getPosY()+1);
+                glutPostRedisplay();
+            }
+            break;
+        case GLUT_KEY_DOWN:
+            if (!isMoving && actual->getPosY()-1 >-10) {
+                actual->setPosY(actual->getPosY()-1);
+                glutPostRedisplay();
+            }
+            break;
+        case GLUT_KEY_RIGHT:
+            if (!isMoving && actual->getPosX()+1 < 10) {
+                actual->setPosX(actual->getPosX()+1);
+                glutPostRedisplay();
+            }
+            break;
+        case GLUT_KEY_LEFT:
+            if (!isMoving && actual->getPosX()-1 >-10) {
+                actual->setPosX(actual->getPosX()-1);
+                glutPostRedisplay();
+            }
+            break;
+        default:
+            break;
+    }
+}
 
 int main(int argc, char** argv)
 {
@@ -233,6 +297,7 @@ int main(int argc, char** argv)
     glutDisplayFunc(display);
     glutTimerFunc(500, myTimer, 1);
     glutKeyboardFunc(keyboard);
+    glutSpecialFunc(specialKeys);
     glutMainLoop();
     return 0;
 }
