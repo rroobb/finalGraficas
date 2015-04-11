@@ -9,7 +9,7 @@
 #include <windows.h>
 #include <GL/glut.h>
 #endif
-
+#include "glm.h"
 #include <stdlib.h>
 #include <stdio.h>
 #include "Pelota.h"
@@ -23,7 +23,7 @@ float velX,velY;
 bool isMoving = false;
 int dificultad;
 vector<Pelota*> pelotasEstaticas;
-
+GLMmodel *model = NULL;
 const float medida = 10.0;
 
 
@@ -224,6 +224,11 @@ void display()
     glutSolidSphere(1, 20, 20);
     glColor3ub(0, 0, 255);
     glutWireSphere(1, 20, 20);
+    /*model = glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut1.obj");
+    glmUnitize(model);
+    glmFacetNormals(model);
+    glmVertexNormals(model, 90.0, GL_TRUE);
+    glmDraw(model, GLM_SMOOTH | GLM_MATERIAL);*/
     glPopMatrix();
     
     for (int i=0; i<pelotasEstaticas.size(); i++) {
