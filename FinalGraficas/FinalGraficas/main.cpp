@@ -14,6 +14,8 @@
 #include <stdio.h>
 #include "Pelota.h"
 #include <vector>
+#include <string>
+#include <sstream>
 
 using namespace std;
 
@@ -25,7 +27,17 @@ int dificultad;
 vector<Pelota*> pelotasEstaticas;
 GLMmodel *model = NULL;
 const float medida = 10.0;
+int score, t;
+string time2 = "0:00";
+string scoreS = "Score: ";
+bool gameOver = false;
+std::ostringstream strStream;
 
+void formato (int i){
+    time2[0]= '0' + t/60;
+    time2[2]= '0' + (t/10) % 6;
+    time2[3]= '0' + t % 10;
+}
 
 float getRandomVel(){
     float aux = rand() % 11;
@@ -43,13 +55,18 @@ void initValues(){
     isMoving = false;
 }
 
-void init(void)
-{
-    glClearColor(0.0, 0.0, 0.0, 0.0);
-    glShadeModel(GL_SMOOTH);
-    glEnable(GL_DEPTH_TEST);
-    initValues();
-    dificultad = 0;
+
+
+void despliegaTexto(string texto, float x, float y, float sizeX, float sizeY) {
+    glMatrixMode(GL_MODELVIEW);
+    glPushMatrix();
+    glTranslatef(x,y,0);
+    glScalef(sizeX, sizeY, 1.0);
+    
+    for (int k=0;k<texto.length(); k++)
+        glutStrokeCharacter(GLUT_STROKE_ROMAN,texto[k]);
+    
+    glPopMatrix();
 }
 
 void reshape (int w, int h)
@@ -64,6 +81,7 @@ void reshape (int w, int h)
 }
 
 int getRandomTipo(){
+    return 0;
     int tipo = 0;
     switch (dificultad) {
         case 0: //facil
@@ -81,9 +99,45 @@ int getRandomTipo(){
     return tipo;
 }
 
+void initLevel1(){
+    pelotasEstaticas.push_back(new Pelota(-9, 9, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(0, 0, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(9, 9, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(-9, -9, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(9, -9, -60, getRandomTipo()));
+}
+
+void initLevel2(){
+    initLevel1();
+    pelotasEstaticas.push_back(new Pelota(-4, -4, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(-4, 4, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(4, 4, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(4, -4, -60, getRandomTipo()));
+}
+
+void initLevel3(){
+    initLevel2();
+    pelotasEstaticas.push_back(new Pelota(0, -9, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(0, 9, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(-9, 0, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(9, 0, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(0, -4, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(0, 4, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(-4, 0, -60, getRandomTipo()));
+    pelotasEstaticas.push_back(new Pelota(4, 0, -60, getRandomTipo()));
+}
+
+void freeVector(){
+    for (int i=0; i<pelotasEstaticas.size(); i++) {
+        delete(pelotasEstaticas[i]);
+    }
+    pelotasEstaticas.clear();
+}
+
 
 void myTimer(int v)
 {
+    if (v == 1) {
     if (isMoving) {
 
         if (actual->getPosX()>=9 || actual->getPosX()<=-9) {
@@ -105,6 +159,12 @@ void myTimer(int v)
                     break;
                 case 1:
                     initValues();
+                    if (actual->getPosZ()+1 >= -20) {
+                        gameOver = true;
+                        freeVector();
+                        glutPostRedisplay();
+                        return;
+                    }
                     pelotasEstaticas.push_back(actual);
                     actual = new Pelota(0,0,-20,getRandomTipo());
                     glutPostRedisplay();
@@ -130,6 +190,7 @@ void myTimer(int v)
                     actual->setPosY(0);
                     actual->setPosZ(-20);
                     actual->setTipo(getRandomTipo());
+                    score += 30;
                     glutPostRedisplay();
                     return;
                     break;
@@ -145,6 +206,32 @@ void myTimer(int v)
     }
     
     glutTimerFunc(100, myTimer, 1);
+    }
+    else if (v==2){
+        t--;
+        if (t == 0) {
+            gameOver = true;
+            freeVector();
+            glutPostRedisplay();
+            return;
+        }
+        formato(t);
+        glutPostRedisplay();
+        glutTimerFunc(1000,myTimer,2);
+    }
+}
+
+void init(void)
+{
+    glClearColor(0.0, 0.0, 0.0, 0.0);
+    glShadeModel(GL_SMOOTH);
+    glEnable(GL_DEPTH_TEST);
+    initValues();
+    dificultad = 0;
+    score = 0;
+    t=600;
+    glutTimerFunc(1000, myTimer, 2);
+    initLevel3();
 }
 
 void createList()
@@ -164,6 +251,44 @@ void createList()
     glEnd();
     glLineWidth(10);
     glEndList();
+}
+
+
+void reverseString(char *ptr){
+    char*aux=ptr;
+    char*ptr2=ptr;
+    char letra;
+    if (ptr==NULL or  *ptr=='\0' or *(ptr+1)=='\0') {
+        return;
+    }
+    while (*aux!='\0') {
+        aux++;
+    }
+    aux--;
+    while (aux>ptr) {
+        letra=*ptr;
+        *ptr=*aux;
+        *aux=letra;
+        ptr++;
+        aux--;
+    }
+}
+
+string getStringFromInt(int numero){
+    if (numero == 0) {
+        return "0";
+    }
+    int auxiliar;
+    string numero2="";
+    while(numero>0){
+        auxiliar = numero % 10;
+        numero2+= ('0'+auxiliar);
+        numero/= 10;
+    }
+    char *ptr=&numero2[0];
+    reverseString(ptr);
+    return numero2;
+    
 }
 
 void display()
@@ -241,6 +366,21 @@ void display()
         glutWireSphere(1, 20, 20);
         glPopMatrix();
     }
+    
+    glColor3ub(0, 0, 0);
+
+    despliegaTexto(scoreS + getStringFromInt(score),-2.5,1.2,0.002,0.002);
+    
+    despliegaTexto(time2,-.4,1.2,0.002,0.002);
+    
+    strStream << velX;
+    
+    despliegaTexto("Vel X: "+ strStream.str(),-2.5,-3,0.002,0.002);
+    strStream.str("");
+    strStream << velY;
+    despliegaTexto("Vel Y: "+ strStream.str(),-2.5,-3.3,0.002,0.002);
+    strStream.str("");
+    
 
     glutSwapBuffers();
 }
