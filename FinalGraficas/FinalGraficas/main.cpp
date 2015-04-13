@@ -28,7 +28,7 @@ float velX,velY;
 bool isMoving = false;
 int dificultad;
 vector<Pelota*> pelotasEstaticas;
-GLMmodel *model = NULL;
+GLMmodel model[8] ;
 const float medida = 10.0;
 int score, t;
 string time2 = "0:00";
@@ -137,15 +137,14 @@ void initRendering()
     glGenTextures(1, texName); //Make room for our texture
     Image* image;
 
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\instrucciones.bmp");
-    image = loadBMP("/imagenes/instrucciones.bmp");
+    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/instrucciones.bmp");
     loadTexture(image,0);
 
     delete image;
 }
 
 int getRandomTipo(){
-    return 0;
+
     int tipo = 0;
     switch (dificultad) {
         case 0: //facil
@@ -295,6 +294,41 @@ void init(void)
     glEnable(GL_DEPTH_TEST);
 }
 
+void initModels(){
+    model[0] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut1.obj");
+    glmUnitize(model);
+    glmFacetNormals(model);
+    glmVertexNormals(model, 90.0, GL_TRUE);
+    model[1] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/cake.obj");
+    glmUnitize(model+1);
+    glmFacetNormals(model+1);
+    glmVertexNormals(model+1, 90.0, GL_TRUE);
+    model[2] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut4.obj");
+    glmUnitize(model+2);
+    glmFacetNormals(model+2);
+    glmVertexNormals(model+2, 90.0, GL_TRUE);
+    model[3] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/pie.obj");
+    glmUnitize(model+3);
+    glmFacetNormals(model+3);
+    glmVertexNormals(model+3, 90.0, GL_TRUE);
+    model[4] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/pizza1.obj");
+    glmUnitize(model+4);
+    glmFacetNormals(model+4);
+    glmVertexNormals(model+4, 90.0, GL_TRUE);
+    model[5] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut2.obj");
+    glmUnitize(model+5);
+    glmFacetNormals(model+5);
+    glmVertexNormals(model+5, 90.0, GL_TRUE);
+    model[6] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/pizza3.obj");
+    glmUnitize(model+6);
+    glmFacetNormals(model+6);
+    glmVertexNormals(model+6, 90.0, GL_TRUE);
+    model[7] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/hamburger2.obj");
+    glmUnitize(model+7);
+    glmFacetNormals(model+7);
+    glmVertexNormals(model+7, 90.0, GL_TRUE);
+}
+
 void initGame(){
     score = 0;
     glutTimerFunc(1000, myTimer, 2);
@@ -312,6 +346,7 @@ void initGame(){
             break;
     }
     initValues();
+    initModels();
     menuNivel = false;
 }
 
@@ -542,14 +577,12 @@ void display()
 		glTranslatef (actual->getPosX(), actual->getPosY(), actual->getPosZ() );
 
 		glRotatef(actual->getPosZ(), 1.0, 1.0, 1.0);
-		glutSolidSphere(1, 20, 20);
+
 		glColor3ub(0, 0, 255);
-		glutWireSphere(1, 20, 20);
-		/*model = glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut1.obj");
-		glmUnitize(model);
-		glmFacetNormals(model);
-		glmVertexNormals(model, 90.0, GL_TRUE);
-		glmDraw(model, GLM_SMOOTH | GLM_MATERIAL);*/
+
+        glmDraw(model + actual->getTipo(),  GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL);
+
+        
 		glPopMatrix();
 
 		for (int i=0; i<pelotasEstaticas.size(); i++) {
