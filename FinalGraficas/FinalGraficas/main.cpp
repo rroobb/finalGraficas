@@ -33,7 +33,7 @@ const float medida = 10.0;
 int score, t;
 string time2 = "0:00";
 string scoreS = "Score: ";
-bool gameOver = false, pausa = false;
+bool gameOver = false, winGame = false, pausa = false;
 std::ostringstream strStream;
 
 bool menuInicial = true;
@@ -201,7 +201,7 @@ void freeVector(){
 void myTimer(int v)
 {
     if (v == 1) {
-        if (isMoving && !menuInicial && !menuNivel && !instrucciones && !pausa) {
+        if (isMoving && !menuInicial && !menuNivel && !instrucciones && !pausa && !gameOver && !winGame) {
 
             if (actual->getPosX()>=9 || actual->getPosX()<=-9) {
                 velX*=-1;
@@ -254,6 +254,10 @@ void myTimer(int v)
                         actual->setPosZ(-20);
                         actual->setTipo(getRandomTipo());
                         score += 30;
+                        if(pelotasEstaticas.empty()) {
+                            winGame = true;
+                            freeVector();
+                        }
                         glutPostRedisplay();
                         return;
                         break;
@@ -272,7 +276,7 @@ void myTimer(int v)
     }
     else if (v==2){
 
-        if(!pausa && !menuInicial && !menuNivel && !instrucciones) {
+        if(!pausa && !menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame) {
             t--;
             if (t == 0) {
                 gameOver = true;
@@ -315,25 +319,6 @@ void initGame(){
     menuNivel = false;
 }
 
-void createList()
-{
-    listaPelota= glGenLists(1);
-    glNewList(listaPelota, GL_COMPILE);
-    glutSolidSphere(1, 1,10);
-    glLineWidth(10);
-    glEndList();
-    listaFondo= glGenLists(1);
-    glNewList(listaFondo, GL_COMPILE);
-    glBegin(GL_QUADS);
-    glVertex3f( -.5, -.5, 2 );
-    glVertex3f( -.5,  .5, 2);
-    glVertex3f(  .5,  .5, 2 );
-    glVertex3f(  .5, -.5, 2 );
-    glEnd();
-    glLineWidth(10);
-    glEndList();
-}
-
 void reverseString(char *ptr){
     char*aux=ptr;
     char*ptr2=ptr;
@@ -371,6 +356,16 @@ string getStringFromInt(int numero){
 
 }
 
+void resetJuego()
+{
+    actual = new  Pelota(0,0,-20,0);
+    isMoving = false;
+    model = NULL;
+    time2 = "0:00";
+    scoreS = "Score: ";
+    pausa = false;
+}
+
 void opcionVolver()
 {
     //Opcion: Volver a menu principal
@@ -390,6 +385,38 @@ void opcionVolver()
     despliegaTexto(volverTxt,-2.15,0.95,0.0025,0.0025);
 }
 
+void ultimasDosOpciones()
+{
+    //Opcion 2: Instrucciones o Intermedio o Volver a jugar
+    if(seleccion_2) glColor3ub(139, 0, 139);
+    else glColor3ub(0, 0, 0);
+    glPushMatrix();
+    glTranslatef (0, -1.0, 0);
+    glRotatef(2, 1.0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3f( -1.4, -0.5, -2.0 );
+    glVertex3f(  1.4, -0.5, -2.0 );
+    glVertex3f(  1.4,  0.5, -2.0 );
+    glVertex3f( -1.4,  0.5, -2.0 );
+    glEnd();
+    glPopMatrix();
+
+
+    //Opcion 3: Salir o Dificil
+    if(seleccion_3) glColor3ub(139, 0, 139);
+    else glColor3ub(0, 0, 0);
+    glPushMatrix();
+    glTranslatef (0, -3.0, 0);
+    glRotatef(2, 1.0, 0, 0);
+    glBegin(GL_QUADS);
+    glVertex3f( -1.5, -0.5, -2.0 );
+    glVertex3f(  1.5, -0.5, -2.0 );
+    glVertex3f(  1.5,  0.5, -2.0 );
+    glVertex3f( -1.5,  0.5, -2.0 );
+    glEnd();
+    glPopMatrix();
+}
+
 void mostrarMenu()
 {
     glPushMatrix();
@@ -407,52 +434,21 @@ void mostrarMenu()
     glVertex3f( -1.5,  0.5, -2.0 );
     glEnd();
     glPopMatrix();
+
+    ultimasDosOpciones();
+
     glColor3ub(255, 255, 255);
-    if(menuInicial)
+    if(menuInicial) {
         despliegaTexto(jugarTxt,-0.8,0.4,0.005,0.005);
-    else if(menuNivel)
-        despliegaTexto(facilTxt,-0.7,0.3,0.005,0.005);
-
-    //Opcion 2: Instrucciones o Intermedio
-    if(seleccion_2) glColor3ub(139, 0, 139);
-    else glColor3ub(0, 0, 0);
-    glPushMatrix();
-    glTranslatef (0, -1.0, 0);
-    glRotatef(2, 1.0, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3f( -1.4, -0.5, -2.0 );
-    glVertex3f(  1.4, -0.5, -2.0 );
-    glVertex3f(  1.4,  0.5, -2.0 );
-    glVertex3f( -1.4,  0.5, -2.0 );
-    glEnd();
-    glPopMatrix();
-    glColor3ub(255, 255, 255);
-    if(menuInicial)
         despliegaTexto(instruccionesTxt,-0.95,-1.05,0.0025,0.0025);
-    else if(menuNivel)
-        despliegaTexto(medioTxt,-0.93,-1.07,0.003,0.003);
-
-    //Opcion 3: Salir o Dificil
-    if(seleccion_3) glColor3ub(139, 0, 139);
-    else glColor3ub(0, 0, 0);
-    glPushMatrix();
-    glTranslatef (0, -3.0, 0);
-    glRotatef(2, 1.0, 0, 0);
-    glBegin(GL_QUADS);
-    glVertex3f( -1.5, -0.5, -2.0 );
-    glVertex3f(  1.5, -0.5, -2.0 );
-    glVertex3f(  1.5,  0.5, -2.0 );
-    glVertex3f( -1.5,  0.5, -2.0 );
-    glEnd();
-    glPopMatrix();
-    glColor3ub(255, 255, 255);
-    if(menuInicial)
         despliegaTexto(salirTxt,-0.65,-2.7,0.005,0.005);
-    else if(menuNivel)
+    }
+    else if(menuNivel) {
+        despliegaTexto(facilTxt,-0.7,0.3,0.005,0.005);
+        despliegaTexto(medioTxt,-0.93,-1.07,0.003,0.003);
         despliegaTexto(dificilTxt,-0.75,-2.7,0.005,0.005);
-
-    if(menuNivel)
         opcionVolver();
+    }
 
     glPopMatrix();
 }
@@ -479,6 +475,24 @@ void mostrarInstrucciones()
     glPopMatrix();
 
     opcionVolver();
+}
+
+void mostrarFinJuego()
+{
+    ultimasDosOpciones();
+    glColor3ub(255, 255, 255);
+    despliegaTexto("Jugar otro",-0.85,-1.05,0.0025,0.0025);
+    despliegaTexto(salirTxt,-0.65,-2.7,0.005,0.005);
+
+    glLineWidth(5);
+    glColor3ub(0, 0, 0);
+    if(winGame) {
+        despliegaTexto("Felicidades",-1.6,0.7,0.005,0.005);
+    } else if(gameOver){
+        despliegaTexto("Fin del juego",-2.2,0.7,0.005,0.005);
+    }
+    despliegaTexto("Score: " + getStringFromInt(score),-0.9,-0.15,0.003,0.003);
+    glLineWidth(1);
 }
 
 void display()
@@ -535,6 +549,9 @@ void display()
     else if(instrucciones) {
         mostrarInstrucciones();
     }
+    else if(gameOver || winGame) {
+        mostrarFinJuego();
+    }
     else {
 		glColor3ub(0, 0, 0);
 		glPushMatrix();
@@ -545,11 +562,13 @@ void display()
 		glutSolidSphere(1, 20, 20);
 		glColor3ub(0, 0, 255);
 		glutWireSphere(1, 20, 20);
-		/*model = glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut1.obj");
+		/*glDisable(GL_COLOR_MATERIAL);
+		model = glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut1.obj");
 		glmUnitize(model);
 		glmFacetNormals(model);
 		glmVertexNormals(model, 90.0, GL_TRUE);
-		glmDraw(model, GLM_SMOOTH | GLM_MATERIAL);*/
+		glmDraw(model, GLM_SMOOTH | GLM_MATERIAL);
+		glEnable(GL_COLOR_MATERIAL)*/
 		glPopMatrix();
 
 		for (int i=0; i<pelotasEstaticas.size(); i++) {
@@ -576,6 +595,7 @@ void display()
 		strStream << velY;
 		despliegaTexto("Vel Y: "+ strStream.str(),-2.5,-3.3,0.002,0.002);
 		strStream.str("");
+		glLineWidth(1);
     }
 
     glutSwapBuffers();
@@ -591,14 +611,14 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
 
         case 't':
         case 'T':
-            if (!isMoving && !menuInicial && !menuNivel && !instrucciones) {
+            if (!isMoving && !menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame) {
                 isMoving=true;
                 glutTimerFunc(100, myTimer, 1);
             }
             break;
         case 'p':
         case 'P':
-            if (!menuInicial && !menuNivel && !instrucciones) {
+            if (!menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame) {
                 if (pausa){
                     pausa = false;
                 }
@@ -612,7 +632,7 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
 }
 
 void specialKeys (int key, int x, int y){
-    if(!menuInicial && !menuNivel && !instrucciones) {
+    if(!menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame) {
 		switch (key) {
 			case GLUT_KEY_UP:
 				if (!isMoving && actual->getPosY()+1 <10) {
@@ -652,7 +672,7 @@ void myMouse(int button, int state, int x, int y)
     if (state == GLUT_DOWN && button == GLUT_LEFT_BUTTON)
     {
         seleccion_1 = false; seleccion_2 = false; seleccion_2 = false; seleccion_v = false;
-        if(menuInicial || menuNivel) {
+        if(menuInicial || menuNivel || gameOver || winGame) {
             xIzq = windowWidth*222/800; xDer = windowWidth*578/800;
             yUp_1 = windowHeight*90/800; yDown_1 = windowHeight*207/800;
             yUp_2 = windowHeight*332/800; yDown_2 = windowHeight*448/800;
@@ -680,9 +700,15 @@ void myMouse(int button, int state, int x, int y)
                         menuNivel = false;
                         initGame();
                     }
+                    else if(gameOver || winGame) {
+                        resetJuego();
+                        gameOver = false;
+                        winGame = false;
+                        menuNivel = true;
+                    }
                 }
                 else if(y >= yUp_3 && y <= yDown_3) {
-                    if(menuInicial) {
+                    if(menuInicial || gameOver || winGame) {
                         exit(0);
                     }
                     else if(menuNivel) {
@@ -715,7 +741,7 @@ void passive(int x, int y)
     int xIzq, xDer, yUp_1, yDown_1, yUp_2, yDown_2, yUp_3, yDown_3;
     int yUp_volver = windowHeight*33/800, yDown_volver = windowHeight*103/800;
     int xIzq_volver = windowWidth*39/800, xDer_volver = windowWidth*205/800;
-    if(menuInicial || menuNivel) {
+    if(menuInicial || menuNivel || gameOver || winGame) {
         xIzq = windowWidth*222/800; xDer = windowWidth*578/800;
         yUp_1 = windowHeight*90/800; yDown_1 = windowHeight*207/800;
         yUp_2 = windowHeight*332/800; yDown_2 = windowHeight*448/800;
