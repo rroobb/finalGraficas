@@ -17,6 +17,7 @@
 #include <string>
 #include <sstream>
 #include "imageloader.h"
+#include <fstream>
 
 using namespace std;
 
@@ -579,7 +580,7 @@ void display()
 		glRotatef(actual->getPosZ(), 1.0, 1.0, 1.0);
 
 		glColor3ub(0, 0, 255);
-
+        
         glmDraw(model + actual->getTipo(),  GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL);
 
         
