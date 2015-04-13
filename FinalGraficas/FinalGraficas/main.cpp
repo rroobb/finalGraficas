@@ -32,7 +32,7 @@ const float medida = 10.0;
 int score, t;
 string time2 = "0:00";
 string scoreS = "Score: ";
-bool gameOver = false;
+bool gameOver = false, pausa = false;
 std::ostringstream strStream;
 
 bool menuInicial = true;
@@ -222,7 +222,8 @@ void myTimer(int v)
         glutTimerFunc(100, myTimer, 1);
     }
     else if (v==2){
-        if(!menuInicial && !menuNivel && !instrucciones) {
+        
+        if(!pausa && !menuInicial && !menuNivel && !instrucciones) {
             t--;
             if (t == 0) {
                 gameOver = true;
@@ -233,7 +234,8 @@ void myTimer(int v)
             formato(t);
             glutPostRedisplay();
         }
-        glutTimerFunc(1000,myTimer,2);
+            glutTimerFunc(1000,myTimer,2);
+        
     }
 }
 
@@ -242,11 +244,25 @@ void init(void)
     glClearColor(0.0, 0.0, 0.0, 0.0);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
-    initValues();
-    dificultad = 0;
+}
+void initGame(){
     score = 0;
     glutTimerFunc(1000, myTimer, 2);
-    initLevel3();
+    switch (dificultad) {
+        case 0:
+            initLevel1();
+            break;
+        case 1:
+            initLevel2();
+            break;
+        case 2:
+            initLevel3();
+            break;
+        default:
+            break;
+    }
+    initValues();
+    menuNivel = false;
 }
 
 void createList()
@@ -509,12 +525,22 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
             break;
 
         case 't':
+        case 'T':
             if (!isMoving && !menuInicial && !menuNivel && !instrucciones) {
                 isMoving=true;
                 glutTimerFunc(100, myTimer, 1);
             }
             break;
-
+        case 'p':
+        case 'P':
+            if (!menuInicial && !menuNivel && !instrucciones) {
+                if (pausa){
+                    pausa = false;
+                }
+                else{
+                    pausa = true;
+                }
+            }
         default:
             break;
     }
@@ -575,7 +601,7 @@ void myMouse(int button, int state, int x, int y)
                     else if(menuNivel) {
                         dificultad = 0;
                         t = 600;
-                        menuNivel = false;
+                        initGame();
                     }
                 }
                 else if(y >= yUp_2 && y <= yDown_2) {
@@ -587,6 +613,7 @@ void myMouse(int button, int state, int x, int y)
                         dificultad = 1;
                         t = 450;
                         menuNivel = false;
+                        initGame();
                     }
                 }
                 else if(y >= yUp_3 && y <= yDown_3) {
@@ -597,6 +624,7 @@ void myMouse(int button, int state, int x, int y)
                         dificultad = 2;
                         t = 450;
                         menuNivel = false;
+                        initGame();
                     }
                 }
             }
