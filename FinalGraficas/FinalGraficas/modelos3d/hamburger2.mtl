@@ -1,0 +1,43 @@
+#
+## Alias OBJ Material File
+# Exported from SketchUp, (c) 2000-2012 Trimble Navigation Limited
+
+newmtl Groundcover_Sand_Smooth
+Ka 0.000000 0.000000 0.000000
+Kd 0.800000 0.580392 0.333333
+Ks 0.330000 0.330000 0.330000
+map_Kd hamburger2/Groundcover_Sand_Smooth.jpg
+
+newmtl _Groundcover_Sand_Smooth_1
+Ka 0.000000 0.000000 0.000000
+Kd 0.611765 0.003922 0.000000
+Ks 0.330000 0.330000 0.330000
+map_Kd hamburger2/_Groundcover_Sand_Smooth_1.jpg
+
+newmtl _5
+Ka 0.000000 0.000000 0.000000
+Kd 0.298039 0.537255 0.164706
+Ks 0.330000 0.330000 0.330000
+map_Kd hamburger2/_5.bmp
+
+newmtl Color_F11
+Ka 0.000000 0.000000 0.000000
+Kd 0.298039 0.600000 0.000000
+Ks 0.330000 0.330000 0.330000
+
+newmtl Color_D03
+Ka 0.000000 0.000000 0.000000
+Kd 1.000000 0.847059 0.396078
+Ks 0.330000 0.330000 0.330000
+
+newmtl FrontColor
+Ka 0.000000 0.000000 0.000000
+Kd 0.890196 0.882353 0.870588
+Ks 0.330000 0.330000 0.330000
+
+newmtl _Groundcover_Brick_Crushed_1
+Ka 0.000000 0.000000 0.000000
+Kd 0.301961 0.168627 0.129412
+Ks 0.330000 0.330000 0.330000
+map_Kd hamburger2/_Groundcover_Brick_Crushed_1.jpg
+

@@ -16,6 +16,7 @@
 #include <vector>
 #include <string>
 #include <sstream>
+#include "imageloader.h"
 
 using namespace std;
 
@@ -47,6 +48,8 @@ facilTxt = "Facil",
 medioTxt = "Intermedio",
 dificilTxt = "Dificil",
 volverTxt = "Volver";
+
+static GLuint texName[1];
 
 void formato (int i){
     time2[0]= '0' + t/60;
@@ -93,6 +96,52 @@ void reshape (int w, int h)
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     glTranslatef(0.0f, 1.0f, -6.0f);
+}
+
+//Makes the image into a texture, and returns the id of the texture
+void loadTexture(Image* image,int k)
+{
+
+    glBindTexture(GL_TEXTURE_2D, texName[k]); //Tell OpenGL which texture to edit
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_NEAREST);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_NEAREST);
+
+
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER,GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER,GL_LINEAR);
+
+    //Map the image to the texture
+    glTexImage2D(GL_TEXTURE_2D,                //Always GL_TEXTURE_2D
+                 0,                            //0 for now
+                 GL_RGB,                       //Format OpenGL uses for image
+                 image->width, image->height,  //Width and height
+                 0,                            //The border of the image
+                 GL_RGB, //GL_RGB, because pixels are stored in RGB format
+                 GL_UNSIGNED_BYTE, //GL_UNSIGNED_BYTE, because pixels are stored
+                 //as unsigned numbers
+                 image->pixels);               //The actual pixel data
+
+}
+
+void initRendering()
+{
+    GLfloat ambientLight[] = {1.0f, 1.0f, 1.0f, 1.0f};
+    glLightModelfv(GL_LIGHT_MODEL_AMBIENT, ambientLight);
+
+    glEnable(GL_LIGHT0);
+    glEnable(GL_NORMALIZE);
+
+    glGenTextures(1, texName); //Make room for our texture
+    Image* image;
+
+    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\instrucciones.bmp");
+    image = loadBMP("/imagenes/instrucciones.bmp");
+    loadTexture(image,0);
+
+    delete image;
 }
 
 int getRandomTipo(){
@@ -152,7 +201,7 @@ void freeVector(){
 void myTimer(int v)
 {
     if (v == 1) {
-        if (isMoving && !menuInicial && !menuNivel && !instrucciones) {
+        if (isMoving && !menuInicial && !menuNivel && !instrucciones && !pausa) {
 
             if (actual->getPosX()>=9 || actual->getPosX()<=-9) {
                 velX*=-1;
@@ -222,7 +271,7 @@ void myTimer(int v)
         glutTimerFunc(100, myTimer, 1);
     }
     else if (v==2){
-        
+
         if(!pausa && !menuInicial && !menuNivel && !instrucciones) {
             t--;
             if (t == 0) {
@@ -235,7 +284,7 @@ void myTimer(int v)
             glutPostRedisplay();
         }
             glutTimerFunc(1000,myTimer,2);
-        
+
     }
 }
 
@@ -245,6 +294,7 @@ void init(void)
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
 }
+
 void initGame(){
     score = 0;
     glutTimerFunc(1000, myTimer, 2);
@@ -410,10 +460,25 @@ void mostrarMenu()
 void mostrarInstrucciones()
 {
     glPushMatrix();
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glTranslatef (0, -1.3, 0);
+    glBindTexture(GL_TEXTURE_2D, texName[0]);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f( -2.3, -2.0, 0 );
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(  2.3, -2.0, 0 );
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(  2.3,  2.0, 0 );
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f( -2.3,  2.0, 0 );
+    glEnd();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 
     opcionVolver();
-
-    glPopMatrix();
 }
 
 void display()
@@ -711,6 +776,7 @@ int main(int argc, char** argv)
     glutInitDisplayMode (GLUT_DOUBLE| GLUT_RGB| GLUT_DEPTH);
     glutCreateWindow("Smash Junk Food");
     init();
+	initRendering();
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutTimerFunc(500, myTimer, 1);
