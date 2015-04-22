@@ -18,6 +18,8 @@
 		6251C6AE1AD581E700A18922 /* glmimg_sim.c in Sources */ = {isa = PBXBuildFile; fileRef = 6251C6A21AD581E700A18922 /* glmimg_sim.c */; };
 		6251C6AF1AD581E700A18922 /* glmimg.c in Sources */ = {isa = PBXBuildFile; fileRef = 6251C6A31AD581E700A18922 /* glmimg.c */; };
 		6269BFB81ACCAAA400286BD2 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6269BFB71ACCAAA400286BD2 /* main.cpp */; };
+		62E345EA1AE2ECBE00D8859D /* Sound.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 62E345E81AE2ECBE00D8859D /* Sound.cpp */; };
+		62E345ED1AE2EEEE00D8859D /* OpenAL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 62E345EC1AE2EEEE00D8859D /* OpenAL.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -51,6 +53,11 @@
 		6269BFB71ACCAAA400286BD2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6269BFC31ACCB0D400286BD2 /* Pelota.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pelota.h; path = ../Pelota.h; sourceTree = "<group>"; };
 		62B0313B1ADB771600EECC94 /* imageloader.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = imageloader.h; sourceTree = "<group>"; };
+		62E345E71AE2ECBE00D8859D /* sonido.1 */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.man; path = sonido.1; sourceTree = "<group>"; };
+		62E345E81AE2ECBE00D8859D /* Sound.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Sound.cpp; sourceTree = "<group>"; };
+		62E345E91AE2ECBE00D8859D /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
+		62E345EB1AE2ED3F00D8859D /* music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = music.wav; sourceTree = "<group>"; };
+		62E345EC1AE2EEEE00D8859D /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -58,6 +65,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				62E345ED1AE2EEEE00D8859D /* OpenAL.framework in Frameworks */,
 				6242E8CD1ACDC45A00061F51 /* OpenGL.framework in Frameworks */,
 				6242E8CB1ACDC44D00061F51 /* GLUT.framework in Frameworks */,
 			);
@@ -78,6 +86,7 @@
 		6269BFAB1ACCAAA400286BD2 = {
 			isa = PBXGroup;
 			children = (
+				62E345EC1AE2EEEE00D8859D /* OpenAL.framework */,
 				6242E8CC1ACDC45A00061F51 /* OpenGL.framework */,
 				6242E8CA1ACDC44D00061F51 /* GLUT.framework */,
 				6269BFB61ACCAAA400286BD2 /* FinalGraficas */,
@@ -98,6 +107,10 @@
 			children = (
 				6269BFC31ACCB0D400286BD2 /* Pelota.h */,
 				6269BFB71ACCAAA400286BD2 /* main.cpp */,
+				62E345EB1AE2ED3F00D8859D /* music.wav */,
+				62E345E71AE2ECBE00D8859D /* sonido.1 */,
+				62E345E81AE2ECBE00D8859D /* Sound.cpp */,
+				62E345E91AE2ECBE00D8859D /* Sound.h */,
 				62B0313B1ADB771600EECC94 /* imageloader.h */,
 				6251C69B1AD581E700A18922 /* glm_util.c */,
 				6251C69C1AD581E700A18922 /* glm.c */,
@@ -178,6 +191,7 @@
 				6269BFB81ACCAAA400286BD2 /* main.cpp in Sources */,
 				6251C6AD1AD581E700A18922 /* glmimg_sdl.c in Sources */,
 				6251C6AB1AD581E700A18922 /* glmimg_jpg.c in Sources */,
+				62E345EA1AE2ECBE00D8859D /* Sound.cpp in Sources */,
 				6251C6AA1AD581E700A18922 /* glmimg_devil.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

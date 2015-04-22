@@ -18,11 +18,15 @@
 #include <sstream>
 #include "imageloader.h"
 #include <fstream>
+#include "Sound.h"
 
 using namespace std;
 
 int windowWidth = 800, windowHeight = 800;
 
+Sound sonido = Sound("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/music.wav");
+bool isPlayingSound = true;
+int tiempoSonido = 0;
 Pelota *actual = new  Pelota(0,0,-20,0);
 int listaPelota, listaFondo;
 float velX,velY;
@@ -293,9 +297,22 @@ void myTimer(int v)
     }
 }
 
+void sonidoF( int v){
+    if (isPlayingSound) {
+        tiempoSonido++;
+        if (tiempoSonido >= 43) {
+            tiempoSonido = 0;
+            sonido.PlaySound();
+        }
+    }
+    glutTimerFunc(1000,sonidoF,2);
+}
+
 void init(void)
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
+    sonido.PlaySound();
+    glutTimerFunc(1000,sonidoF,2);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
 }
@@ -303,7 +320,6 @@ void init(void)
 void initModels(){
     model[0] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut1.obj");
     glmUnitize(model);
-    glmFacetNormals(model);
     glmVertexNormals(model, 90.0, GL_TRUE);
     model[1] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/cake.obj");
     glmUnitize(model+1);
@@ -333,6 +349,7 @@ void initModels(){
     glmUnitize(model+7);
     glmFacetNormals(model+7);
     glmVertexNormals(model+7, 90.0, GL_TRUE);
+
 }
 
 void initGame(){
@@ -657,6 +674,16 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
                 else{
                     pausa = true;
                 }
+            }
+        case 'm':
+        case 'M':
+            if(isPlayingSound){
+                sonido.StopSound();
+                isPlayingSound = false;
+            }
+            else{
+                sonido.PlaySound();
+                isPlayingSound = true;
             }
         default:
             break;
