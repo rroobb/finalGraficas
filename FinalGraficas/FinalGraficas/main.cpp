@@ -17,6 +17,7 @@
 #include <string>
 #include <sstream>
 #include "imageloader.h"
+#include <fstream>
 
 using namespace std;
 
@@ -766,8 +767,7 @@ void display()
 		glPushMatrix();
 		glLineWidth(5);
 		glTranslatef (actual->getPosX(), actual->getPosY(), actual->getPosZ() );
-
-		glRotatef(actual->getPosZ(), 1.0, 1.0, 1.0);
+        glRotatef(90, 1, 1, 0);
 		//glutSolidSphere(1, 20, 20);
 		//glColor3ub(0, 0, 255);
 		//glutWireSphere(1, 20, 20);
@@ -780,9 +780,11 @@ void display()
 			glLineWidth(5);
 			glTranslatef (pelotasEstaticas[i]->getPosX(), pelotasEstaticas[i]->getPosY(), pelotasEstaticas[i]->getPosZ() );
 			glScalef (1, 1, 1);
-			glutSolidSphere(1, 20, 20);
-			glColor3ub(0, 0, 255);
-			glutWireSphere(1, 20, 20);
+            //glutSolidSphere(1, 20, 20);
+			//glColor3ub(0, 0, 255);
+			//glutWireSphere(1, 20, 20);
+            glRotatef(90, 1, 1, 0);
+            glmDraw(model + pelotasEstaticas[i]->getTipo(),  GLM_SMOOTH | GLM_TEXTURE | GLM_MATERIAL);
 			glPopMatrix();
 		}
 
