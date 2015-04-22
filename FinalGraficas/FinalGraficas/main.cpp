@@ -793,7 +793,7 @@ void display()
 		//glColor3ub(0, 0, 255);
 		//glutWireSphere(1, 20, 20);
 
-        glmDraw(&model[actual->getTipo()], GLM_TEXTURE | GLM_MATERIAL);
+        glmDraw(&model[actual->getTipo()], GLM_COLOR | GLM_FLAT);
 		glPopMatrix();
 
 		for (int i=0; i<pelotasEstaticas.size(); i++) {
@@ -805,7 +805,7 @@ void display()
 			//glColor3ub(0, 0, 255);
 			//glutWireSphere(1, 20, 20);
             glRotatef(90, 1, 1, 0);
-            glmDraw(&model[pelotasEstaticas[i]->getTipo()],  GLM_TEXTURE | GLM_MATERIAL);
+            glmDraw(&model[pelotasEstaticas[i]->getTipo()], GLM_COLOR | GLM_FLAT);
 			glPopMatrix();
 		}
 
