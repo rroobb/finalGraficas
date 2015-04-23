@@ -8,7 +8,8 @@
 
 class Pelota{
     private:
-        float posX, posY, posZ, tipo;
+        int tipo;
+        float posX, posY, posZ ;
         Pelota *colision;
     public:
     Pelota(int posX, int posY, int posZ, int tipo);
@@ -91,6 +92,7 @@ int Pelota::checarColision(Pelota* pelota){
         else{
             this->colision = pelota;
             pelota->colision = this;
+            return 2;
         }
     }
     return respuesta;

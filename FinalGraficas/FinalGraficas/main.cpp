@@ -259,8 +259,10 @@ void myTimer(int v)
             }
             if (actual->getPosZ()<=-60) {
                 initValues();
-                pelotasEstaticas.push_back(actual);
-                actual = new Pelota(0,0,-20,getRandomTipo());
+                actual->setPosX(0);
+                actual->setPosY(0);
+                actual->setPosZ(-20);
+                actual->setTipo(getRandomTipo());
                 glutPostRedisplay();
                 return;
             }
@@ -270,12 +272,13 @@ void myTimer(int v)
                         break;
                     case 1:
                         initValues();
-                        if (actual->getPosZ()+1 >= -20) {
-                            gameOver = true;
-                            freeVector();
-                            glutPostRedisplay();
-                            return;
-                        }
+                        actual->setPosX(0);
+                        actual->setPosY(0);
+                        actual->setPosZ(-20);
+                        actual->setTipo(getRandomTipo());
+                        break;
+                    case 2:
+                        initValues();
                         pelotasEstaticas.push_back(actual);
                         actual = new Pelota(0,0,-20,getRandomTipo());
                         glutPostRedisplay();
@@ -696,7 +699,7 @@ void display()
     glBegin(GL_QUADS);
 
     //Arriba
-    glColor3f(1.0, 1.0, 0.0);
+    glColor3f(1.0, 1.0, 1.0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f( -medida, medida, -60 );
     glTexCoord2f(1.0f, 0.0f);
@@ -707,7 +710,6 @@ void display()
     glVertex3f( -medida, medida,  60 );
 
     //Atrás
-	glColor3f(1.0, 1.0, 1.0);
 	glTexCoord2f(0.0f, 0.0f);
     glVertex3f( -medida, -medida, -60 );
     glTexCoord2f(1.0f, 0.0f);
@@ -718,7 +720,6 @@ void display()
     glVertex3f( -medida,  medida, -60 );
 
     //Derecha
-    glColor3f(0.0, 1.0, 0.0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f( medida, -medida, -60 );
     glTexCoord2f(1.0f, 0.0f);
@@ -729,7 +730,6 @@ void display()
     glVertex3f( medida, -medida,  60 );
 
     //Izquierda
-    glColor3f(0.0, 0.0, 1.0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f( -medida, -medida, -60 );
     glTexCoord2f(1.0f, 0.0f);
@@ -740,7 +740,6 @@ void display()
     glVertex3f( -medida,  medida, -60 );
 
     //Abajo
-    glColor3f(1.0, 0.0, 1.0);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f( -medida, -medida, -60 );
     glTexCoord2f(1.0f, 0.0f);
@@ -793,7 +792,7 @@ void display()
 		//glColor3ub(0, 0, 255);
 		//glutWireSphere(1, 20, 20);
 
-        glmDraw(&model[actual->getTipo()], GLM_COLOR | GLM_FLAT);
+        glmDraw(&model[actual->getTipo()], GLM_COLOR );
 		glPopMatrix();
 
 		for (int i=0; i<pelotasEstaticas.size(); i++) {
@@ -805,7 +804,7 @@ void display()
 			//glColor3ub(0, 0, 255);
 			//glutWireSphere(1, 20, 20);
             glRotatef(90, 1, 1, 0);
-            glmDraw(&model[pelotasEstaticas[i]->getTipo()], GLM_COLOR | GLM_FLAT);
+            glmDraw(&model[pelotasEstaticas[i]->getTipo()], GLM_COLOR );
 			glPopMatrix();
 		}
 
@@ -873,25 +872,25 @@ void specialKeys (int key, int x, int y){
     if(!menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame && !pantallaInicio) {
 		switch (key) {
 			case GLUT_KEY_UP:
-				if (!isMoving && actual->getPosY()+1 <10) {
+				if (!isMoving && actual->getPosY()+1 <9) {
 					actual->setPosY(actual->getPosY()+1);
 					glutPostRedisplay();
 				}
 				break;
 			case GLUT_KEY_DOWN:
-				if (!isMoving && actual->getPosY()-1 >-10) {
+				if (!isMoving && actual->getPosY()-1 >-9) {
 					actual->setPosY(actual->getPosY()-1);
 					glutPostRedisplay();
 				}
 				break;
 			case GLUT_KEY_RIGHT:
-				if (!isMoving && actual->getPosX()+1 < 10) {
+				if (!isMoving && actual->getPosX()+1 < 9) {
 					actual->setPosX(actual->getPosX()+1);
 					glutPostRedisplay();
 				}
 				break;
 			case GLUT_KEY_LEFT:
-				if (!isMoving && actual->getPosX()-1 >-10) {
+				if (!isMoving && actual->getPosX()-1 >-9) {
 					actual->setPosX(actual->getPosX()-1);
 					glutPostRedisplay();
 				}
