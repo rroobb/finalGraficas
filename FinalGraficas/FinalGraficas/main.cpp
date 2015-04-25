@@ -38,7 +38,7 @@ const float medida = 10.0;
 int score, t;
 string time2 = "0:00";
 string scoreS = "Score: ";
-bool gameOver = false, winGame = false, pausa = false;
+bool gameOver = false, winGame = false, pausa = false, pausaInstrucciones = false;
 std::ostringstream strStream;
 
 bool menuInicial = false;
@@ -47,15 +47,8 @@ bool instrucciones = false;
 bool seleccion_1 = false, seleccion_2 = false, seleccion_3 = false, seleccion_v = false;
 bool pantallaInicio = true;
 
-string instruccionesTxt = "Instrucciones",
-jugarTxt = "Jugar",
-salirTxt = "Salir",
-facilTxt = "Facil",
-medioTxt = "Intermedio",
-dificilTxt = "Dificil",
-volverTxt = "Volver";
-
-static GLuint texName[15];
+static GLuint texName[40];
+int texNumber = -1;
 
 void formato (int i){
     time2[0]= '0' + t/60;
@@ -132,6 +125,16 @@ void loadTexture(Image* image,int k)
 
 }
 
+void loadImage(string nombreImagen, int numImagen)
+{
+    Image* image;
+    //string ruta = "C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\" + nombreImagen;
+    string ruta = "/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/" + nombreImagen;
+    image = loadBMP(ruta.c_str());
+    loadTexture(image,numImagen);
+    delete image;
+}
+
 void initRendering()
 {
     GLfloat ambientLight[] = {1.0f, 1.0f, 1.0f, 1.0f};
@@ -140,56 +143,47 @@ void initRendering()
     glEnable(GL_LIGHT0);
     glEnable(GL_NORMALIZE);
 
-    glGenTextures(15, texName); //Make room for our texture
-    Image* image;
+    glGenTextures(39, texName); //Make room for our texture
 
-	//image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\inicio.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/inicio.bmp");
-    loadTexture(image,0);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\pared.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/pared.bmp");
-    loadTexture(image,1);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\boton.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/boton.bmp");
-    loadTexture(image,2);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\boton_seleccionado.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/boton_seleccionado.bmp");
-    loadTexture(image,3);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\volver.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/volver.bmp");
-    loadTexture(image,4);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i1-1.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i1-1.bmp");
-    loadTexture(image,5);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i1-2.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i1-2.bmp");
-    loadTexture(image,6);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i2-1.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i2-1.bmp");
-    loadTexture(image,7);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i2-2.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i2-2.bmp");
-    loadTexture(image,8);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i3-1.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i3-1.bmp");
-    loadTexture(image,9);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i3-2.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i3-2.bmp");
-    loadTexture(image,10);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i4-1.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i4-1.bmp");
-    loadTexture(image,11);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i4-2.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i4-2.bmp");
-    loadTexture(image,12);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i5-1.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i5-1.bmp");
-    loadTexture(image,13);
-    //image = loadBMP("C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\i5-2.bmp");
-    image = loadBMP("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/i5-2.bmp");
-    loadTexture(image,14);
-
-    delete image;
+	loadImage("volver2.bmp",++texNumber);
+	loadImage("pared.bmp",++texNumber);
+	loadImage("jugar1.bmp",++texNumber);
+	loadImage("jugar2.bmp",++texNumber);
+	loadImage("volver1.bmp",++texNumber);
+	loadImage("i1-1.bmp",++texNumber);
+	loadImage("i1-2.bmp",++texNumber);
+	loadImage("i2-1.bmp",++texNumber);
+	loadImage("i2-2.bmp",++texNumber);
+	loadImage("i3-1.bmp",++texNumber);
+	loadImage("i3-2.bmp",++texNumber);
+	loadImage("i4-1.bmp",++texNumber);
+	loadImage("i4-2.bmp",++texNumber);
+	loadImage("i5-1.bmp",++texNumber);
+	loadImage("i5-2.bmp",++texNumber);
+	loadImage("smash.bmp",++texNumber);
+	loadImage("junk.bmp",++texNumber);
+	loadImage("food.bmp",++texNumber);
+	loadImage("inicio1.bmp",++texNumber);
+	loadImage("inicio2.bmp",++texNumber);
+	loadImage("objetivo.bmp",++texNumber);
+	loadImage("escuela.bmp",++texNumber);
+	loadImage("materia.bmp",++texNumber);
+	loadImage("autores.bmp",++texNumber);
+	loadImage("instrucciones1.bmp",++texNumber);
+	loadImage("instrucciones2.bmp",++texNumber);
+	loadImage("salir1.bmp",++texNumber);
+	loadImage("salir2.bmp",++texNumber);
+	loadImage("facil1.bmp",++texNumber);
+	loadImage("facil2.bmp",++texNumber);
+	loadImage("intermedio1.bmp",++texNumber);
+	loadImage("intermedio2.bmp",++texNumber);
+	loadImage("dificil1.bmp",++texNumber);
+	loadImage("dificil2.bmp",++texNumber);
+	loadImage("metaJuego.bmp",++texNumber);
+	loadImage("nuevoJuego1.bmp",++texNumber);
+	loadImage("nuevoJuego2.bmp",++texNumber);
+	loadImage("ganador.bmp",++texNumber);
+	loadImage("perdedor.bmp",++texNumber);
 }
 
 int getRandomTipo(){
@@ -249,7 +243,7 @@ void freeVector(){
 void myTimer(int v)
 {
     if (v == 1) {
-        if (isMoving && !menuInicial && !menuNivel && !instrucciones && !pausa && !gameOver && !winGame && !pantallaInicio) {
+        if (isMoving && !menuInicial && !menuNivel && !instrucciones && !pausa && !gameOver && !winGame && !pantallaInicio && !pausaInstrucciones) {
 
             if (actual->getPosX()>=9 || actual->getPosX()<=-9) {
                 velX*=-1;
@@ -327,7 +321,7 @@ void myTimer(int v)
     }
     else if (v==2){
 
-        if(!pausa && !menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame && !pantallaInicio) {
+        if(!pausa && !menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame && !pantallaInicio && !pausaInstrucciones) {
             t--;
             if (t == 0) {
                 gameOver = true;
@@ -388,7 +382,7 @@ void initModels(){
     glmUnitize(&model[6]);
     glmVertexNormals(&model[6], 90.0, GL_TRUE);
     model[7] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/hamburger2.obj");
-    
+
     glmUnitize(&model[7]);
     glmVertexNormals(&model[7], 90.0, GL_TRUE);
 
@@ -459,18 +453,18 @@ void resetJuego()
     time2 = "0:00";
     scoreS = "Score: ";
     pausa = false;
+    pausaInstrucciones = false;
 }
 
 void opcionVolver()
 {
     //Opcion: Volver a menu principal
-    if(seleccion_v) glBindTexture(GL_TEXTURE_2D, texName[2]);
+    if(seleccion_v) glBindTexture(GL_TEXTURE_2D, texName[0]);
     else glBindTexture(GL_TEXTURE_2D, texName[4]);
     glPushMatrix();
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
     glTranslatef (-2.3, 1.7, 0);
-    glRotatef(1, 1.0, 0, 0);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f( -0.7, -0.3, -2.0 );
@@ -484,31 +478,26 @@ void opcionVolver()
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-    glColor3ub(255, 255, 255);
-    glLineWidth(2);
-    despliegaTexto(volverTxt,-2.15,0.95,0.0025,0.0025);
-    glLineWidth(1);
 }
 
-void ultimasDosOpciones()
+void ultimasDosOpciones(int textura11, int textura12, int textura21, int textura22)
 {
     //Opcion 2: Instrucciones o Intermedio o Volver a jugar
-    if(seleccion_2) glBindTexture(GL_TEXTURE_2D, texName[2]);
-    else glBindTexture(GL_TEXTURE_2D, texName[3]);
+    if(seleccion_2) glBindTexture(GL_TEXTURE_2D, texName[textura12]);
+    else glBindTexture(GL_TEXTURE_2D, texName[textura11]);
     glPushMatrix();
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
-    glTranslatef (0, -1.0, 0);
-    glRotatef(2, 1.0, 0, 0);
+    glTranslatef (0, -2.5, 0);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 0.0f);
-    glVertex3f( -1.4, -0.5, -2.0 );
+    glVertex3f( -3.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 0.0f);
-    glVertex3f(  1.4, -0.5, -2.0 );
+    glVertex3f(  3.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(  1.4,  0.5, -2.0 );
+    glVertex3f(  3.0,  0.3, -2.0 );
     glTexCoord2f(0.0f, 1.0f);
-    glVertex3f( -1.4,  0.5, -2.0 );
+    glVertex3f( -3.0,  0.3, -2.0 );
     glEnd();
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
@@ -516,13 +505,34 @@ void ultimasDosOpciones()
 
 
     //Opcion 3: Salir o Dificil
-    if(seleccion_3) glBindTexture(GL_TEXTURE_2D, texName[2]);
-    else glBindTexture(GL_TEXTURE_2D, texName[3]);
+    if(seleccion_3) glBindTexture(GL_TEXTURE_2D, texName[textura22]);
+    else glBindTexture(GL_TEXTURE_2D, texName[textura21]);
     glPushMatrix();
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
-    glTranslatef (0, -3.0, 0);
-    glRotatef(2, 1.0, 0, 0);
+    glTranslatef (0, -3.5, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f( -3.0, -0.3, -2.0 );
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(  3.0, -0.3, -2.0 );
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(  3.0,  0.3, -2.0 );
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f( -3.0,  0.3, -2.0 );
+    glEnd();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
+}
+
+void tituloPantallaInicio(int textura, float x, float y)
+{
+    glBindTexture(GL_TEXTURE_2D, texName[textura]);
+    glPushMatrix();
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glTranslatef (x, y, 0);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 0.0f);
     glVertex3f( -1.5, -0.5, -2.0 );
@@ -540,48 +550,45 @@ void ultimasDosOpciones()
 
 void mostrarMenu()
 {
-    glPushMatrix();
-
     //Opcion 1: Jugar o Facil
-    if(seleccion_1) glBindTexture(GL_TEXTURE_2D, texName[2]);
-    else glBindTexture(GL_TEXTURE_2D, texName[3]);
+    if(menuInicial) {
+        if(seleccion_1) glBindTexture(GL_TEXTURE_2D, texName[3]);
+        else glBindTexture(GL_TEXTURE_2D, texName[2]);
+    } else if(menuNivel) {
+        if(seleccion_1) glBindTexture(GL_TEXTURE_2D, texName[29]);
+        else glBindTexture(GL_TEXTURE_2D, texName[28]);
+    }
     glPushMatrix();
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
-    glTranslatef (0, 1.0, 0);
-    glRotatef(2, 1.0, 0, 0);
+    glTranslatef (0, -1.5, 0);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 0.0f);
-    glVertex3f( -1.5, -0.5, -2.0 );
+    glVertex3f( -3.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 0.0f);
-    glVertex3f(  1.5, -0.5, -2.0 );
+    glVertex3f(  3.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(  1.5,  0.5, -2.0 );
+    glVertex3f(  3.0,  0.3, -2.0 );
     glTexCoord2f(0.0f, 1.0f);
-    glVertex3f( -1.5,  0.5, -2.0 );
+    glVertex3f( -3.0,  0.3, -2.0 );
     glEnd();
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
-    ultimasDosOpciones();
-
-    glColor3ub(255, 255, 255);
-    glLineWidth(2);
     if(menuInicial) {
-        despliegaTexto(jugarTxt,-0.8,0.4,0.005,0.005);
-        despliegaTexto(instruccionesTxt,-0.95,-1.05,0.0025,0.0025);
-        despliegaTexto(salirTxt,-0.65,-2.7,0.005,0.005);
-    }
-    else if(menuNivel) {
-        despliegaTexto(facilTxt,-0.7,0.3,0.005,0.005);
-        despliegaTexto(medioTxt,-0.93,-1.07,0.003,0.003);
-        despliegaTexto(dificilTxt,-0.75,-2.7,0.005,0.005);
+        ultimasDosOpciones(24,25,26,27);
+    } else if(menuNivel) {
+        ultimasDosOpciones(30,31,32,33);
         opcionVolver();
     }
-    glLineWidth(1);
 
-    glPopMatrix();
+    //Smash
+    tituloPantallaInicio(15,-0.1,1.7);
+    //Junk
+    tituloPantallaInicio(16,-1.5,0.7);
+    //Food
+    tituloPantallaInicio(17,1.5,0.7);
 }
 
 void mostrarInstrucciones(int tex, float posX, float posY, float sizeX, float sizeY)
@@ -604,87 +611,129 @@ void mostrarInstrucciones(int tex, float posX, float posY, float sizeX, float si
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
-
-    opcionVolver();
 }
 
 void mostrarFinJuego()
 {
+    ultimasDosOpciones(35,36,26,27);
+
+    if(winGame) glBindTexture(GL_TEXTURE_2D, texName[37]);
+    else glBindTexture(GL_TEXTURE_2D, texName[38]);
     glPushMatrix();
-
-    ultimasDosOpciones();
-
-    glColor3ub(255, 255, 255);
-    glLineWidth(2);
-    despliegaTexto("Jugar otro",-0.85,-1.05,0.0025,0.0025);
-    despliegaTexto(salirTxt,-0.65,-2.7,0.005,0.005);
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glTranslatef (-0.1, 0.7, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f( -2.5, -0.5, -2.0 );
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(  2.5, -0.5, -2.0 );
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(  2.5,  0.5, -2.0 );
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f( -2.5,  0.5, -2.0 );
+    glEnd();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
+    glPopMatrix();
 
     glLineWidth(5);
-    glColor3ub(144, 238, 144);
-    if(winGame) {
-        despliegaTexto("Felicidades",-1.6,0.7,0.005,0.005);
-    } else if(gameOver){
-        despliegaTexto("Fin del juego",-2.2,0.7,0.005,0.005);
-    }
-    despliegaTexto("Score: " + getStringFromInt(score),-0.9,-0.15,0.003,0.003);
+    glColor3ub(103, 152, 208);
+    despliegaTexto("Score: " + getStringFromInt(score),-0.9,-0.5,0.003,0.003);
     glLineWidth(1);
+}
 
+void creditosPantallaInicio(int textura, float x, float y)
+{
+    glBindTexture(GL_TEXTURE_2D, texName[textura]);
+    glPushMatrix();
+    glEnable(GL_LIGHTING);
+    glEnable(GL_TEXTURE_2D);
+    glTranslatef (x, y, 0);
+    glBegin(GL_QUADS);
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f( -2.4, -0.3, -2.0 );
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(  2.4, -0.3, -2.0 );
+    glTexCoord2f(1.0f, 1.0f);
+    glVertex3f(  2.4,  0.3, -2.0 );
+    glTexCoord2f(0.0f, 1.0f);
+    glVertex3f( -2.4,  0.3, -2.0 );
+    glEnd();
+    glDisable(GL_LIGHTING);
+    glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 }
 
 void mostrarPantallaInicio()
 {
-    if(seleccion_3) glBindTexture(GL_TEXTURE_2D, texName[2]);
-    else glBindTexture(GL_TEXTURE_2D, texName[3]);
+    //Boton inicio
+    if(seleccion_3) glBindTexture(GL_TEXTURE_2D, texName[19]);
+    else glBindTexture(GL_TEXTURE_2D, texName[18]);
     glPushMatrix();
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
-    glTranslatef (0, -3.0, 0);
-    glRotatef(2, 1.0, 0, 0);
+    glTranslatef (0, -3.5, 0);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 0.0f);
-    glVertex3f( -1.5, -0.5, -2.0 );
+    glVertex3f( -3.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 0.0f);
-    glVertex3f(  1.5, -0.5, -2.0 );
+    glVertex3f(  3.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(  1.5,  0.5, -2.0 );
+    glVertex3f(  3.0,  0.3, -2.0 );
     glTexCoord2f(0.0f, 1.0f);
-    glVertex3f( -1.5,  0.5, -2.0 );
+    glVertex3f( -3.0,  0.3, -2.0 );
     glEnd();
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
 
-    glColor3ub(255, 255, 255);
-    glLineWidth(2);
-    despliegaTexto("Inicio",-0.75,-2.7,0.005,0.005);
+    //Smash
+    tituloPantallaInicio(15,-0.1,1.7);
+    //Junk
+    tituloPantallaInicio(16,-1.5,0.7);
+    //Food
+    tituloPantallaInicio(17,1.5,0.7);
+    //Objetivo
+    creditosPantallaInicio(20,-0.1,-0.1);
+    //Escuela
+    creditosPantallaInicio(21,-0.1,-1.1);
+    //Materia
+    creditosPantallaInicio(22,-0.1,-1.8);
+    //Autores
+    creditosPantallaInicio(23,-0.1,-2.5);
+}
 
-    glColor3ub(144, 238, 144);
-    glLineWidth(7);
-    despliegaTexto("Smash",-1.0,0.9,0.005,0.005);
-    despliegaTexto("Junk Food",-1.7,0.3,0.005,0.005);
-
-    glLineWidth(1);
-
-    glBindTexture(GL_TEXTURE_2D, texName[0]);
+void llamarMostrarInstrucciones()
+{
+    glBindTexture(GL_TEXTURE_2D, texName[34]);
     glPushMatrix();
     glEnable(GL_LIGHTING);
     glEnable(GL_TEXTURE_2D);
-    glTranslatef (0, -0.9, 0);
-    glRotatef(2, 1.0, 0, 0);
+    glTranslatef (0, 0.8, 0);
     glBegin(GL_QUADS);
     glTexCoord2f(0.0f, 0.0f);
-    glVertex3f( -1.8, -1.4, -2.0 );
+    glVertex3f( -2.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 0.0f);
-    glVertex3f(  1.8, -1.4, -2.0 );
+    glVertex3f(  2.0, -0.3, -2.0 );
     glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(  1.8,  1.4, -2.0 );
+    glVertex3f(  2.0,  0.3, -2.0 );
     glTexCoord2f(0.0f, 1.0f);
-    glVertex3f( -1.8,  1.4, -2.0 );
+    glVertex3f( -2.0,  0.3, -2.0 );
     glEnd();
     glDisable(GL_LIGHTING);
     glDisable(GL_TEXTURE_2D);
     glPopMatrix();
+    mostrarInstrucciones(5,-1.0,-0.3,0.3,0.3);
+    mostrarInstrucciones(6,0.5,-0.3,0.8,0.3);
+    mostrarInstrucciones(7,-1.0,-1.0,0.3,0.3);
+    mostrarInstrucciones(8,0.5,-1.0,0.8,0.3);
+    mostrarInstrucciones(9,-1.0,-1.7,0.3,0.3);
+    mostrarInstrucciones(10,0.5,-1.7,0.8,0.3);
+    mostrarInstrucciones(11,-1.0,-2.4,0.3,0.3);
+    mostrarInstrucciones(12,0.5,-2.4,0.8,0.3);
+    mostrarInstrucciones(13,-1.0,-3.1,0.3,0.3);
+    mostrarInstrucciones(14,0.5,-3.1,0.6,0.3);
 }
 
 void display()
@@ -700,13 +749,13 @@ void display()
 
     //Arriba
     glColor3f(1.0, 1.0, 1.0);
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f( -medida, medida, -60 );
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex3f(  medida, medida, -60 );
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(  medida, medida,  60 );
     glTexCoord2f(0.0f, 1.0f);
+    glVertex3f( -medida, medida, -60 );
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(  medida, medida, -60 );
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(  medida, medida,  60 );
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f( -medida, medida,  60 );
 
     //Atrás
@@ -720,13 +769,13 @@ void display()
     glVertex3f( -medida,  medida, -60 );
 
     //Derecha
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f( medida, -medida, -60 );
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex3f( medida,  medida, -60 );
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3f( medida,  medida,  60 );
     glTexCoord2f(0.0f, 1.0f);
+    glVertex3f( medida, -medida, -60 );
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f( medida,  medida, -60 );
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f( medida,  medida,  60 );
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f( medida, -medida,  60 );
 
     //Izquierda
@@ -734,19 +783,19 @@ void display()
     glVertex3f( -medida, -medida, -60 );
     glTexCoord2f(1.0f, 0.0f);
     glVertex3f( -medida, -medida,  60 );
-    glTexCoord2f(0.0f, 1.0f);
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f( -medida,  medida,  60 );
     glTexCoord2f(0.0f, 1.0f);
     glVertex3f( -medida,  medida, -60 );
 
     //Abajo
-    glTexCoord2f(0.0f, 0.0f);
-    glVertex3f( -medida, -medida, -60 );
-    glTexCoord2f(1.0f, 0.0f);
-    glVertex3f(  medida, -medida, -60 );
-    glTexCoord2f(1.0f, 1.0f);
-    glVertex3f(  medida, -medida,  60 );
     glTexCoord2f(0.0f, 1.0f);
+    glVertex3f( -medida, -medida, -60 );
+    glTexCoord2f(0.0f, 0.0f);
+    glVertex3f(  medida, -medida, -60 );
+    glTexCoord2f(1.0f, 0.0f);
+    glVertex3f(  medida, -medida,  60 );
+    glTexCoord2f(1.0f, 1.0f);
     glVertex3f( -medida, -medida,  60 );
 
     glEnd();
@@ -759,67 +808,108 @@ void display()
 	}
 	else if(menuInicial || menuNivel) {
         mostrarMenu();
+        //Hamburguesa
+        glPushMatrix();
+		glLineWidth(5);
+		glScalef(0.3,0.3,1.0);
+		glTranslatef (0, -2.0, 0);
+        glRotatef(90, 1, 1, 0);
+		glmDraw(&model[7], GLM_SMOOTH | GLM_MATERIAL);
+		glPopMatrix();
+		//Dona
+		glPushMatrix();
+		glLineWidth(5);
+		glScalef(0.3,0.3,1.0);
+		glTranslatef (-2.7, -1.7, 0);
+        glRotatef(90, 1, 1, 0);
+		glmDraw(&model[0], GLM_SMOOTH | GLM_MATERIAL);
+		glPopMatrix();
+		//Pie
+		glPushMatrix();
+		glLineWidth(5);
+		glScalef(0.3,0.3,1.0);
+		glTranslatef (2.7, -1.7, 0);
+        glRotatef(90, 1, 1, 0);
+		glmDraw(&model[3], GLM_SMOOTH | GLM_MATERIAL);
+		glPopMatrix();
     }
     else if(instrucciones) {
-        mostrarInstrucciones(5,-1.0,0.4,0.4,0.35);
-        mostrarInstrucciones(6,0.5,0.4,0.9,0.35);
-        mostrarInstrucciones(7,-1.0,-0.4,0.4,0.35);
-        mostrarInstrucciones(8,0.5,-0.4,0.9,0.35);
-        mostrarInstrucciones(9,-1.0,-1.2,0.4,0.35);
-        mostrarInstrucciones(10,0.5,-1.2,0.9,0.35);
-        mostrarInstrucciones(11,-1.0,-2.0,0.4,0.35);
-        mostrarInstrucciones(12,0.5,-2.0,0.9,0.35);
-        mostrarInstrucciones(13,-1.0,-2.8,0.4,0.35);
-        mostrarInstrucciones(14,0.5,-2.8,0.7,0.35);
+        llamarMostrarInstrucciones();
+        opcionVolver();
     }
     else if(gameOver || winGame) {
         mostrarFinJuego();
+        //Cake
+        glPushMatrix();
+		glLineWidth(5);
+		glScalef(0.3,0.3,1.0);
+		glTranslatef (0, -3.3, 0);
+        glRotatef(90, 1, 1, 0);
+		glmDraw(&model[1], GLM_SMOOTH | GLM_MATERIAL);
+		glPopMatrix();
+		//Dona
+		glPushMatrix();
+		glLineWidth(5);
+		glScalef(0.3,0.3,1.0);
+		glTranslatef (-2.7, -3.9, 0);
+        glRotatef(90, 1, 1, 0);
+		glmDraw(&model[2], GLM_SMOOTH | GLM_MATERIAL);
+		glPopMatrix();
+		//Pizza
+		glPushMatrix();
+		glLineWidth(5);
+		glScalef(0.3,0.3,1.0);
+		glTranslatef (2.7, -3.9, 0);
+        glRotatef(90, 1, 1, 0);
+		glmDraw(&model[4], GLM_SMOOTH | GLM_MATERIAL);
+		glPopMatrix();
     }
     else {
+        opcionVolver();
         if(pausa) {
-            glColor3ub(144, 238, 144);
+            glColor3ub(91, 194, 167);
             glLineWidth(7);
             despliegaTexto("Pausa",-0.98,-1.05,0.0055,0.0055);
             glLineWidth(1);
         }
-		glColor3ub(0, 0, 0);
+        if(pausaInstrucciones) {
+            llamarMostrarInstrucciones();
+        }
+		//glColor3ub(0, 0, 0);
 
 		glPushMatrix();
-		glLineWidth(5);
+		//glLineWidth(5);
 		glTranslatef (actual->getPosX(), actual->getPosY(), actual->getPosZ() );
+		glScalef (1, 1, 1);
         glRotatef(90, 1, 1, 0);
 		//glutSolidSphere(1, 20, 20);
 		//glColor3ub(0, 0, 255);
 		//glutWireSphere(1, 20, 20);
-
-        glmDraw(&model[actual->getTipo()], GLM_COLOR );
+        glmDraw(&model[actual->getTipo()], GLM_SMOOTH | GLM_MATERIAL);
 		glPopMatrix();
 
 		for (int i=0; i<pelotasEstaticas.size(); i++) {
 			glPushMatrix();
-			glLineWidth(5);
+			//glLineWidth(5);
 			glTranslatef (pelotasEstaticas[i]->getPosX(), pelotasEstaticas[i]->getPosY(), pelotasEstaticas[i]->getPosZ() );
 			glScalef (1, 1, 1);
             //glutSolidSphere(1, 20, 20);
 			//glColor3ub(0, 0, 255);
 			//glutWireSphere(1, 20, 20);
             glRotatef(90, 1, 1, 0);
-            glmDraw(&model[pelotasEstaticas[i]->getTipo()], GLM_COLOR );
+            glmDraw(&model[pelotasEstaticas[i]->getTipo()], GLM_SMOOTH | GLM_MATERIAL);
 			glPopMatrix();
 		}
 
-		glColor3ub(255, 255, 255);
-
-		despliegaTexto(scoreS + getStringFromInt(score),-2.5,1.2,0.002,0.002);
-
+		glColor3ub(0, 0, 0);
+		glLineWidth(5);
+		despliegaTexto(scoreS + getStringFromInt(score),1.0,1.2,0.002,0.002);
 		despliegaTexto(time2,-.4,1.2,0.002,0.002);
-
 		strStream << velX;
-
-		despliegaTexto("Vel X: "+ strStream.str(),-2.5,-3,0.002,0.002);
+		despliegaTexto("Vel X: "+ strStream.str(),-2.3,-3,0.002,0.002);
 		strStream.str("");
 		strStream << velY;
-		despliegaTexto("Vel Y: "+ strStream.str(),-2.5,-3.3,0.002,0.002);
+		despliegaTexto("Vel Y: "+ strStream.str(),-2.3,-3.3,0.002,0.002);
 		strStream.str("");
 		glLineWidth(1);
     }
@@ -853,6 +943,19 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
                     glutPostRedisplay();
                 }
             }
+            break;
+        case 'i':
+        case 'I':
+            if (!menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame && !pantallaInicio) {
+                if (pausaInstrucciones){
+                    pausaInstrucciones = false;
+                }
+                else{
+                    pausaInstrucciones = true;
+                    glutPostRedisplay();
+                }
+            }
+            break;
         case 'm':
         case 'M':
             if(isPlayingSound){
@@ -863,13 +966,14 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
                 sonido.PlaySound();
                 isPlayingSound = true;
             }
+            break;
         default:
             break;
     }
 }
 
 void specialKeys (int key, int x, int y){
-    if(!menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame && !pantallaInicio) {
+    if(!menuInicial && !menuNivel && !instrucciones && !gameOver && !winGame && !pantallaInicio && !pausa && !pausaInstrucciones) {
 		switch (key) {
 			case GLUT_KEY_UP:
 				if (!isMoving && actual->getPosY()+1 <9) {
@@ -910,11 +1014,11 @@ void myMouse(int button, int state, int x, int y)
     {
         seleccion_1 = false; seleccion_2 = false; seleccion_2 = false; seleccion_v = false;
         if(menuInicial || menuNivel || gameOver || winGame || pantallaInicio) {
-            xIzq = windowWidth*222/800; xDer = windowWidth*578/800;
-            yUp_1 = windowHeight*90/800; yDown_1 = windowHeight*207/800;
-            yUp_2 = windowHeight*332/800; yDown_2 = windowHeight*448/800;
-            yUp_3 = windowHeight*574/800; yDown_3 = windowHeight*689/800;
-            if(x >= xIzq && x <= xDer) {
+            xIzq = windowWidth*39/800; xDer = windowWidth*760/800;
+            yUp_1 = windowHeight*429/800; yDown_1 = windowHeight*495/800;
+            yUp_2 = windowHeight*547/800; yDown_2 = windowHeight*615/800;
+            yUp_3 = windowHeight*667/800; yDown_3 = windowHeight*736/800;
+            if(x >= xIzq && x <= xDer && (y >= yUp_1 && y <= yDown_1 || y >= yUp_2 && y <= yDown_2 || y >= yUp_3 && y <= yDown_3)) {
                 if(y >= yUp_1 && y <= yDown_1) {
                     if(menuInicial) {
                         menuInicial = false;
@@ -923,6 +1027,7 @@ void myMouse(int button, int state, int x, int y)
                     else if(menuNivel) {
                         dificultad = 0;
                         t = 3;
+                        menuNivel = false;
                         initGame();
                     }
                 }
@@ -973,6 +1078,12 @@ void myMouse(int button, int state, int x, int y)
                 menuInicial = true;
             }
         }
+        else {
+            if(x >= xIzq_volver && x <= xDer_volver && y >= yUp_volver && y <= yDown_volver) {
+                resetJuego();
+                menuNivel = true;
+            }
+        }
         glutPostRedisplay();
     }
 }
@@ -983,11 +1094,11 @@ void passive(int x, int y)
     int yUp_volver = windowHeight*33/800, yDown_volver = windowHeight*103/800;
     int xIzq_volver = windowWidth*39/800, xDer_volver = windowWidth*205/800;
     if(menuInicial || menuNivel || gameOver || winGame || pantallaInicio) {
-        xIzq = windowWidth*222/800; xDer = windowWidth*578/800;
-        yUp_1 = windowHeight*90/800; yDown_1 = windowHeight*207/800;
-        yUp_2 = windowHeight*332/800; yDown_2 = windowHeight*448/800;
-        yUp_3 = windowHeight*574/800; yDown_3 = windowHeight*689/800;
-        if(x >= xIzq && x <= xDer) {
+        xIzq = windowWidth*39/800; xDer = windowWidth*760/800;
+        yUp_1 = windowHeight*429/800; yDown_1 = windowHeight*495/800;
+        yUp_2 = windowHeight*547/800; yDown_2 = windowHeight*615/800;
+        yUp_3 = windowHeight*667/800; yDown_3 = windowHeight*736/800;
+        if(x >= xIzq && x <= xDer && (y >= yUp_1 && y <= yDown_1 || y >= yUp_2 && y <= yDown_2 || y >= yUp_3 && y <= yDown_3)) {
             if(y >= yUp_1 && y <= yDown_1) {
                 seleccion_1 = true;
             }
@@ -1025,6 +1136,9 @@ void passive(int x, int y)
         else {
             seleccion_v = false;
         }
+    }
+    else if(x >= xIzq_volver && x <= xDer_volver && y >= yUp_volver && y <= yDown_volver) {
+        seleccion_v = true;
     }
     else {
         seleccion_v = false;
