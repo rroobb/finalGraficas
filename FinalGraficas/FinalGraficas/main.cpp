@@ -20,13 +20,15 @@
 #include <fstream>
 #include "Sound.h"
 
+
 using namespace std;
 
 int windowWidth = 800, windowHeight = 800;
 
-Sound sonido = Sound("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/music.wav");
+Sound *sonido;
 bool isPlayingSound = true;
 int tiempoSonido = 0;
+bool isTimeRuning = false;
 Pelota *actual = new  Pelota(0,0,-20,0);
 int listaPelota, listaFondo;
 float velX,velY;
@@ -40,7 +42,8 @@ string time2 = "0:00";
 string scoreS = "Score: ";
 bool gameOver = false, winGame = false, pausa = false, pausaInstrucciones = false;
 std::ostringstream strStream;
-
+string fullPath = __FILE__;
+string auxPath;
 bool menuInicial = false;
 bool menuNivel = false;
 bool instrucciones = false;
@@ -129,10 +132,11 @@ void loadImage(string nombreImagen, int numImagen)
 {
     Image* image;
     //string ruta = "C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\" + nombreImagen;
-    string ruta = "/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/imagenes/" + nombreImagen;
+    string ruta = "./imagenes/" + nombreImagen;
     image = loadBMP(ruta.c_str());
     loadTexture(image,numImagen);
     delete image;
+    
 }
 
 void initRendering()
@@ -327,6 +331,7 @@ void myTimer(int v)
                 gameOver = true;
                 freeVector();
                 glutPostRedisplay();
+                isTimeRuning = false;
                 return;
             }
             formato(t);
@@ -342,7 +347,7 @@ void sonidoF( int v){
         tiempoSonido++;
         if (tiempoSonido >= 43) {
             tiempoSonido = 0;
-            sonido.PlaySound();
+            sonido->PlaySound();
         }
     }
     glutTimerFunc(1000,sonidoF,2);
@@ -351,25 +356,25 @@ void sonidoF( int v){
 void init(void)
 {
     glClearColor(0.0, 0.0, 0.0, 0.0);
-    sonido.PlaySound();
+    sonido->PlaySound();
     glutTimerFunc(1000,sonidoF,2);
     glShadeModel(GL_SMOOTH);
     glEnable(GL_DEPTH_TEST);
 }
 
 void initModels(){
-    model[0] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut1.obj");
+    model[0] = *glmReadOBJ("./modelos3d/donut1.obj");
 
     glmUnitize(&model[0]);
     glmVertexNormals(&model[0], 90.0, GL_TRUE);
 
-    model[1] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/cake.obj");
+    model[1] = *glmReadOBJ("./modelos3d/cake.obj");
     glmUnitize(&model[1]);
     glmVertexNormals(&model[1], 90.0, GL_TRUE);
-    model[2] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut4.obj");
+    model[2] = *glmReadOBJ("./modelos3d/donut4.obj");
     glmUnitize(&model[2]);
     glmVertexNormals(&model[2], 90.0, GL_TRUE);
-    model[3] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/pie.obj");
+    model[3] = *glmReadOBJ("./modelos3d/pie.obj");
     glmUnitize(&model[3]);
     glmVertexNormals(&model[3], 90.0, GL_TRUE);
     model[4] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/pizza1.obj");
@@ -390,7 +395,10 @@ void initModels(){
 
 void initGame(){
     score = 0;
-    glutTimerFunc(1000, myTimer, 2);
+    if (!isTimeRuning) {
+     glutTimerFunc(1000, myTimer, 2);
+        isTimeRuning = true;
+    }
     switch (dificultad) {
         case 0:
             initLevel1();
@@ -405,7 +413,6 @@ void initGame(){
             break;
     }
     initValues();
-    initModels();
     menuNivel = false;
 }
 
@@ -454,6 +461,7 @@ void resetJuego()
     scoreS = "Score: ";
     pausa = false;
     pausaInstrucciones = false;
+    freeVector();
 }
 
 void opcionVolver()
@@ -810,27 +818,24 @@ void display()
         mostrarMenu();
         //Hamburguesa
         glPushMatrix();
-		glLineWidth(5);
 		glScalef(0.3,0.3,1.0);
 		glTranslatef (0, -2.0, 0);
         glRotatef(90, 1, 1, 0);
-		glmDraw(&model[7], GLM_SMOOTH | GLM_MATERIAL);
+		glmDraw(&model[7], GLM_COLOR);
 		glPopMatrix();
 		//Dona
 		glPushMatrix();
-		glLineWidth(5);
 		glScalef(0.3,0.3,1.0);
 		glTranslatef (-2.7, -1.7, 0);
         glRotatef(90, 1, 1, 0);
-		glmDraw(&model[0], GLM_SMOOTH | GLM_MATERIAL);
+		glmDraw(&model[1], GLM_COLOR);
 		glPopMatrix();
 		//Pie
 		glPushMatrix();
-		glLineWidth(5);
 		glScalef(0.3,0.3,1.0);
 		glTranslatef (2.7, -1.7, 0);
         glRotatef(90, 1, 1, 0);
-		glmDraw(&model[3], GLM_SMOOTH | GLM_MATERIAL);
+		glmDraw(&model[3], GLM_COLOR);
 		glPopMatrix();
     }
     else if(instrucciones) {
@@ -841,27 +846,24 @@ void display()
         mostrarFinJuego();
         //Cake
         glPushMatrix();
-		glLineWidth(5);
 		glScalef(0.3,0.3,1.0);
 		glTranslatef (0, -3.3, 0);
         glRotatef(90, 1, 1, 0);
-		glmDraw(&model[1], GLM_SMOOTH | GLM_MATERIAL);
+		glmDraw(&model[1], GLM_COLOR);
 		glPopMatrix();
 		//Dona
 		glPushMatrix();
-		glLineWidth(5);
 		glScalef(0.3,0.3,1.0);
 		glTranslatef (-2.7, -3.9, 0);
         glRotatef(90, 1, 1, 0);
-		glmDraw(&model[2], GLM_SMOOTH | GLM_MATERIAL);
+		glmDraw(&model[7], GLM_COLOR);
 		glPopMatrix();
 		//Pizza
 		glPushMatrix();
-		glLineWidth(5);
 		glScalef(0.3,0.3,1.0);
 		glTranslatef (2.7, -3.9, 0);
         glRotatef(90, 1, 1, 0);
-		glmDraw(&model[4], GLM_SMOOTH | GLM_MATERIAL);
+		glmDraw(&model[4], GLM_COLOR);
 		glPopMatrix();
     }
     else {
@@ -875,7 +877,7 @@ void display()
         if(pausaInstrucciones) {
             llamarMostrarInstrucciones();
         }
-		//glColor3ub(0, 0, 0);
+		glColor3ub(255, 255, 255);
 
 		glPushMatrix();
 		//glLineWidth(5);
@@ -885,7 +887,7 @@ void display()
 		//glutSolidSphere(1, 20, 20);
 		//glColor3ub(0, 0, 255);
 		//glutWireSphere(1, 20, 20);
-        glmDraw(&model[actual->getTipo()], GLM_SMOOTH | GLM_MATERIAL);
+        glmDraw(&model[actual->getTipo()], GLM_COLOR);
 		glPopMatrix();
 
 		for (int i=0; i<pelotasEstaticas.size(); i++) {
@@ -897,7 +899,7 @@ void display()
 			//glColor3ub(0, 0, 255);
 			//glutWireSphere(1, 20, 20);
             glRotatef(90, 1, 1, 0);
-            glmDraw(&model[pelotasEstaticas[i]->getTipo()], GLM_SMOOTH | GLM_MATERIAL);
+            glmDraw(&model[pelotasEstaticas[i]->getTipo()], GLM_COLOR);
 			glPopMatrix();
 		}
 
@@ -922,6 +924,8 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
     switch (key)
     {
         case 27:
+            freeVector();
+            delete (sonido);
             exit(0);
             break;
 
@@ -959,11 +963,11 @@ void keyboard(unsigned char key, int mouseX, int mouseY)
         case 'm':
         case 'M':
             if(isPlayingSound){
-                sonido.StopSound();
+                sonido->StopSound();
                 isPlayingSound = false;
             }
             else{
-                sonido.PlaySound();
+                sonido->PlaySound();
                 isPlayingSound = true;
             }
             break;
@@ -1149,8 +1153,17 @@ void passive(int x, int y)
     glutPostRedisplay();
 }
 
+void getParentPath(){
+    for (int i = fullPath.length()-1; i>=0 && fullPath[i] != '/'; i--) {
+        fullPath[i] = '\0';
+    }
+}
+
 int main(int argc, char** argv)
 {
+    getParentPath();
+    auxPath = fullPath + "music.wav";
+    sonido = new Sound(&auxPath[0]);
     glutInit(&argc, argv);
     glutInitWindowSize (windowWidth,windowHeight);
     glutInitWindowPosition (0,0);
@@ -1158,6 +1171,7 @@ int main(int argc, char** argv)
     glutCreateWindow("Smash Junk Food");
     init();
 	initRendering();
+    initModels();
     glutReshapeFunc(reshape);
     glutDisplayFunc(display);
     glutTimerFunc(500, myTimer, 1);

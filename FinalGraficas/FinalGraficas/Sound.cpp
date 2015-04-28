@@ -20,6 +20,7 @@ Sound::~Sound()                 // destructor, just an example
     alcCloseDevice(device);
     
 }
+
 Sound::Sound(char*  filePath){
     
     path  = filePath;

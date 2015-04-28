@@ -47,8 +47,6 @@
 		6251C6A21AD581E700A18922 /* glmimg_sim.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glmimg_sim.c; sourceTree = "<group>"; };
 		6251C6A31AD581E700A18922 /* glmimg.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = glmimg.c; sourceTree = "<group>"; };
 		6251C6A41AD581E700A18922 /* glmint.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = glmint.h; sourceTree = "<group>"; };
-		6251C6A61AD581E700A18922 /* donut1.mtl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = donut1.mtl; sourceTree = "<group>"; };
-		6251C6A71AD581E700A18922 /* donut1.obj */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = donut1.obj; sourceTree = "<group>"; };
 		6269BFB41ACCAAA400286BD2 /* FinalGraficas */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = FinalGraficas; sourceTree = BUILT_PRODUCTS_DIR; };
 		6269BFB71ACCAAA400286BD2 /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6269BFC31ACCB0D400286BD2 /* Pelota.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; name = Pelota.h; path = ../Pelota.h; sourceTree = "<group>"; };
@@ -58,6 +56,8 @@
 		62E345E91AE2ECBE00D8859D /* Sound.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sound.h; sourceTree = "<group>"; };
 		62E345EB1AE2ED3F00D8859D /* music.wav */ = {isa = PBXFileReference; lastKnownFileType = audio.wav; path = music.wav; sourceTree = "<group>"; };
 		62E345EC1AE2EEEE00D8859D /* OpenAL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenAL.framework; path = System/Library/Frameworks/OpenAL.framework; sourceTree = SDKROOT; };
+		62FCAC1B1AEEC0C50080D194 /* imagenes */ = {isa = PBXFileReference; lastKnownFileType = folder; path = imagenes; sourceTree = "<group>"; };
+		62FCAC1C1AEEC0C50080D194 /* modelos3d */ = {isa = PBXFileReference; lastKnownFileType = folder; path = modelos3d; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -74,15 +74,6 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
-		6251C6A51AD581E700A18922 /* modelos3d */ = {
-			isa = PBXGroup;
-			children = (
-				6251C6A61AD581E700A18922 /* donut1.mtl */,
-				6251C6A71AD581E700A18922 /* donut1.obj */,
-			);
-			path = modelos3d;
-			sourceTree = "<group>";
-		};
 		6269BFAB1ACCAAA400286BD2 = {
 			isa = PBXGroup;
 			children = (
@@ -105,6 +96,8 @@
 		6269BFB61ACCAAA400286BD2 /* FinalGraficas */ = {
 			isa = PBXGroup;
 			children = (
+				62FCAC1B1AEEC0C50080D194 /* imagenes */,
+				62FCAC1C1AEEC0C50080D194 /* modelos3d */,
 				6269BFC31ACCB0D400286BD2 /* Pelota.h */,
 				6269BFB71ACCAAA400286BD2 /* main.cpp */,
 				62E345EB1AE2ED3F00D8859D /* music.wav */,
@@ -122,7 +115,6 @@
 				6251C6A21AD581E700A18922 /* glmimg_sim.c */,
 				6251C6A31AD581E700A18922 /* glmimg.c */,
 				6251C6A41AD581E700A18922 /* glmint.h */,
-				6251C6A51AD581E700A18922 /* modelos3d */,
 			);
 			path = FinalGraficas;
 			sourceTree = "<group>";
