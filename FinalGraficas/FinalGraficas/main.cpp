@@ -132,7 +132,7 @@ void loadImage(string nombreImagen, int numImagen)
 {
     Image* image;
     //string ruta = "C:\\Users\\Marialicia\\Documents\\Tec\\8 Semestre\\Graficas\\Proyecto final\\smashJunkFood\\imagenes\\" + nombreImagen;
-    string ruta = "./imagenes/" + nombreImagen;
+    string ruta = fullPath + "./imagenes/" + nombreImagen;
     image = loadBMP(ruta.c_str());
     loadTexture(image,numImagen);
     delete image;
@@ -363,30 +363,38 @@ void init(void)
 }
 
 void initModels(){
-    model[0] = *glmReadOBJ("./modelos3d/donut1.obj");
+    auxPath = fullPath + "modelos3d/donut1.obj";
+    model[0] = *glmReadOBJ(&auxPath[0]);
 
     glmUnitize(&model[0]);
     glmVertexNormals(&model[0], 90.0, GL_TRUE);
 
-    model[1] = *glmReadOBJ("./modelos3d/cake.obj");
+    auxPath = fullPath + "modelos3d/cake.obj";
+    model[1] = *glmReadOBJ(&auxPath[0]);
     glmUnitize(&model[1]);
     glmVertexNormals(&model[1], 90.0, GL_TRUE);
-    model[2] = *glmReadOBJ("./modelos3d/donut4.obj");
+    auxPath = fullPath + "modelos3d/donut4.obj";
+    model[2] = *glmReadOBJ(&auxPath[0]);
     glmUnitize(&model[2]);
     glmVertexNormals(&model[2], 90.0, GL_TRUE);
-    model[3] = *glmReadOBJ("./modelos3d/pie.obj");
+    auxPath = fullPath + "modelos3d/pie.obj";
+    model[3] = *glmReadOBJ(&auxPath[0]);
     glmUnitize(&model[3]);
     glmVertexNormals(&model[3], 90.0, GL_TRUE);
-    model[4] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/pizza1.obj");
+    auxPath = fullPath + "modelos3d/pizza1.obj";
+    model[4] = *glmReadOBJ(&auxPath[0]);
     glmUnitize(&model[4]);
     glmVertexNormals(&model[4], 90.0, GL_TRUE);
-    model[5] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/donut2.obj");
+    auxPath = fullPath + "modelos3d/donut2.obj";
+    model[5] = *glmReadOBJ(&auxPath[0]);
     glmUnitize(&model[5]);
     glmVertexNormals(&model[5], 90.0, GL_TRUE);
-    model[6] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/pizza3.obj");
+    auxPath = fullPath + "modelos3d/pizza3.obj";
+    model[6] = *glmReadOBJ(&auxPath[0]);
     glmUnitize(&model[6]);
     glmVertexNormals(&model[6], 90.0, GL_TRUE);
-    model[7] = *glmReadOBJ("/Users/roberto/Documents/ITC/8vo/Graficas/finalGraficas/FinalGraficas/FinalGraficas/modelos3d/hamburger2.obj");
+    auxPath = fullPath + "modelos3d/hamburger2.obj";
+    model[7] = *glmReadOBJ(&auxPath[0]);
 
     glmUnitize(&model[7]);
     glmVertexNormals(&model[7], 90.0, GL_TRUE);
@@ -1155,7 +1163,7 @@ void passive(int x, int y)
 
 void getParentPath(){
     for (int i = fullPath.length()-1; i>=0 && fullPath[i] != '/'; i--) {
-        fullPath[i] = '\0';
+        fullPath.erase(i,1);
     }
 }
 
